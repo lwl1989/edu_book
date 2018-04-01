@@ -10,10 +10,49 @@ let mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+// mix.webpackConfig({
+//     module: {
+//         rules: [
+//             {
+//                 test: /\.js$/,
+//                 exclude: /node_modules/,
+//                 loader: 'babel-loader',
+//                 options: {
+//                     "plugins": [["component", [
+//                         {
+//                             "libraryName": "element-ui",
+//                             "styleLibraryName": "theme-chalk"
+//                         }
+//                     ]]]
+//                 }
+//             },
+//             // {
+//             //     test: /\.css$/,
+//             //     use: 'css-loader'
+//             // },
+//             // {
+//             //     test: /\.css$/,
+//             //     loader: "style-loader!css-loader"
+//             // },
+//         ]
+//     },
+//     // plugins:[
+//     //     new ExtractTextPlugin('styles.css')
+//     // ]
+// });
 
-// mix.js('resources/assets/js/app.js', 'public/js')
-//    .sass('resources/assets/sass/app.scss', 'public/css');
+mix
+    .js('resources/assets/js/admin.js', 'public/js')
+    .js('resources/assets/js/auth.js', 'public/js')
+    .extract(['element-ui'],'public/js/element-ui.js')
+    .extract(['vue','vue-router','vue-resource'],'public/js/vue.js')
+    .autoload({
+        vue: ['Vue', 'window.Vue']
+    })
+    //.copy('node_modules/element-ui/lib/theme-chalk/index.css', 'public/css/admin.css')
+    .sass('resources/assets/sass/admin.scss', 'public/css/admin.css')
 
-
-mix.js('resources/assets/js/hello.js', 'public/js')
-    .extract(['vue', "vue-router", "axios"])
+;
+//
+// console.log(mix.config);
+// return;
