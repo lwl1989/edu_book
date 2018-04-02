@@ -77,3 +77,6 @@ Route::group(['prefix'=>'p'],function (){
 Route::get('view',function (){
         return view('view');
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

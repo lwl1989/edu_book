@@ -6,7 +6,7 @@
  */
 
 require('./bootstrap');
-
+import Axios from 'axios'
 window.Vue = require('vue');
 
 /**
@@ -16,7 +16,11 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
-
+window.axios = Axios;
+window.axios.defaults.headers.common = {
+    'X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+    'X-Requested-With': 'XMLHttpRequest'
+};
 const app = new Vue({
     el: '#app'
 });

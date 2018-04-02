@@ -19,34 +19,14 @@ window.Vue = VUE;
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-//Vue.use(Axios);
 Vue.use(ElementUi);
 
-// Vue.use(Button);
-// Vue.use(Input);
-// Vue.use(Select);
-// Vue.use(Dialog);
-// Vue.use(Pagination);
-// Vue.use(Table);
-// Vue.use(TableColumn);
-// Vue.use(Dropdown);
-// Vue.use(DropdownItem);
-// Vue.use(DropdownMenu);
-// Vue.use(Menu);
-// Vue.use(MenuItemGroup);
-// Vue.use(MenuItem);
-// Vue.use(Submenu);
-// Vue.use(BreadcrumbItem);
-// Vue.use(Breadcrumb);
-// Vue.use(Row);
-// Vue.use(Col);
 
 window.axios = Axios;
 window.axios.defaults.headers.common = {
     'X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').getAttribute('content'),
     'X-Requested-With': 'XMLHttpRequest'
 };
-//Vue.prototype.$http = Axios;
 Vue.prototype.$ajax = Axios;
 const app = new Vue({
     router,
