@@ -4,6 +4,7 @@ import Router from 'vue-router'
 
 import Admin from '../components/admin/AdminIndexComponent'
 import Home from '../components/CommonComponent'
+import HomeIndex from '../components/admin/HomeIndexComponent'
 import ChangePass from  '../components/admin/ChangePassComponent'
 
 import Book from '../components/book/BookComponent'
@@ -27,9 +28,13 @@ Vue.use(Router);
 
 let routes = [
     {
-        path: '/home',
+        path: '/',
         component: Home,
-        hidden: true
+        redirect:'/home',
+        hidden: true,
+        children:[
+            { path: 'admins', component: HomeIndex, name: '首页' ,hidden: true},
+        ]
     },
     {
         path: '/',

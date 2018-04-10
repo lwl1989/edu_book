@@ -41,6 +41,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Exception $exception
      * @return void
+     * @throws Exception
      */
     public function report(Exception $exception)
     {
@@ -65,6 +66,11 @@ class Handler extends ExceptionHandler
         }
     }
 
+    /**
+     * @param Request $request
+     * @param Exception $e
+     * @return JsonResponse|\Illuminate\Http\Response|Response
+     */
     public function _webRender(Request $request, Exception $e)
     {
         if (method_exists($e, 'render') && $response = $e->render($request)) {
@@ -73,11 +79,26 @@ class Handler extends ExceptionHandler
             return $e->toResponse($request);
         }
 
+        $e = $this->prepareException($e);
+
+        if ($e instanceof HttpResponseException) {
+            return $e->getResponse();
+        } elseif ($e instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $e);
+        } elseif ($e instanceof ValidationException) {
+            return $this->convertValidationExceptionToResponse($e, $request);
+        }
+
         return $request->expectsJson()
             ? $this->prepareJsonResponse($request, $e)
             : $this->prepareResponse($request, $e);
     }
 
+    /**
+     * @param Request $request
+     * @param Exception $e
+     * @return JsonResponse
+     */
     protected function prepareJsonResponse($request, Exception $e)
     {
         $e = $this->prepareException($e);
@@ -105,7 +126,10 @@ class Handler extends ExceptionHandler
         );
     }
 
-
+    /**
+     * @param Exception $exception
+     * @return Response
+     */
     private function _apiRender(Exception $exception) : Response {
         $e = $this->prepareException($exception);
 
