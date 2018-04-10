@@ -4,8 +4,6 @@ namespace App\Library\Auth;
 
 
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Auth\GuardHelpers;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
