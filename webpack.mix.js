@@ -42,7 +42,6 @@ let mix = require('laravel-mix');
 // });
 
 mix
-    .js('resources/assets/js/app.js','public/js')
     .js('resources/assets/js/admin.js', 'public/js')
     .js('resources/assets/js/auth.js', 'public/js')
     .extract(['element-ui'],'public/js/element-ui.js')
@@ -52,7 +51,6 @@ mix
     })
     //.copy('node_modules/element-ui/lib/theme-chalk/index.css', 'public/css/admin.css')
     .sass('resources/assets/sass/admin.scss', 'public/css/admin.css')
-    .sass('resources/assets/sass/app.scss', 'public/css/admin.css')
 
 ;
 //

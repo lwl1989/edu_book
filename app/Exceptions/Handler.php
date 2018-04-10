@@ -4,8 +4,12 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -57,9 +61,50 @@ class Handler extends ExceptionHandler
         if( strpos($request->path(),'api/') === 0) {
             return $this->_apiRender($e);
         }else{
-            return parent::render($request, $e);
+            return $this->_webRender($request, $e);
         }
     }
+
+    public function _webRender(Request $request, Exception $e)
+    {
+        if (method_exists($e, 'render') && $response = $e->render($request)) {
+            return Router::toResponse($request, $response);
+        } elseif ($e instanceof Responsable) {
+            return $e->toResponse($request);
+        }
+
+        return $request->expectsJson()
+            ? $this->prepareJsonResponse($request, $e)
+            : $this->prepareResponse($request, $e);
+    }
+
+    protected function prepareJsonResponse($request, Exception $e)
+    {
+        $e = $this->prepareException($e);
+
+        $status = 400;
+        if ($e instanceof HttpResponseException) {
+            $status = 419;
+        } elseif ($e instanceof AuthenticationException) {
+            $status = 401;
+        } elseif ($e instanceof ValidationException) {
+            $status = 400;
+        }
+
+        $headers = $this->isHttpException($e) ? $e->getHeaders() : [];
+
+        $data = [];
+        $data['response'] = $e->getMessage();
+        $code = intval($e->getCode());
+        $code = $code > 0 ? $code : 1;
+        $data['code'] = $code;
+
+        return new JsonResponse(
+            $data, $status, $headers,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+        );
+    }
+
 
     private function _apiRender(Exception $exception) : Response {
         $e = $this->prepareException($exception);

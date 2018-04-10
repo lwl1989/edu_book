@@ -1,19 +1,17 @@
 
-import App from  './components/auth/LoginComponent.vue'
 import VUE from 'vue'
-import VueResource from 'vue-resource'
+import ElementUi from "element-ui"
+import Axios from 'axios'
+import App from  './components/auth/LoginComponent.vue'
 
 window.Vue = VUE;
-Vue.use(VueResource);
-Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
 
-import { Form, FormItem, Checkbox, Input ,Button} from 'element-ui'
-
-Vue.use(Form);
-Vue.use(FormItem);
-Vue.use(Checkbox);
-Vue.use(Input);
-Vue.use(Button);
+Vue.use(ElementUi);
+window.axios = Axios;
+window.axios.defaults.headers.common = {
+    'X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+    'X-Requested-With': 'XMLHttpRequest'
+};
 
 const app = new Vue({
     render: h => h(App)

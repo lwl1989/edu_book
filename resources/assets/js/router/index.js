@@ -3,32 +3,27 @@ import Router from 'vue-router'
 
 
 import Admin from '../components/admin/AdminIndexComponent'
-import Company from '../components/admin/Company'
 import Home from '../components/CommonComponent'
-import ChangePass from '../components/admin/ChangePassComponent'
-import ChangeMobile from '../components/admin/ChangePassComponent'
-import UserComponent from '../components/admin/UserComponent'
+import ChangePass from  '../components/admin/ChangePassComponent'
 
-import Deparment from '../components/deparment/DeparmentIndex'
-import DeparmentGroup from '../components/deparment/DeparmentGroup'
+import Book from '../components/book/BookComponent'
+import BookDetail from '../components/book/BookDetailComponent'
+import BookOrder from '../components/book/BookOrderComponent'
 
-import GoldAccount from '../components/gold/GoldAccount'
-import GoldDate from '../components/gold/GoldDate'
-import GoldSend from '../components/gold/GoldSend'
+import Teacher from '../components/teacher/TeacherComponent'
+import TeacherReceive from '../components/teacher/TeacherReceiveComponent'
+import TeacherDetail from '../components/teacher/TeacherDetailComponent'
 
-import Goods from  '../components/goods/GoodsList'
+import Student from '../components/student/StudentComponent'
+import StudentReceive from '../components/student/StudentReceiveComponent'
+import StudentDetail from '../components/student/StudentDetailComponent'
 
-import MessageList from '../components/message/MessageList'
-import MessageAcitvity from '../components/message/MessageActivity'
-import MessageAuto from '../components/message/MessageAuto'
-import MessageExcel from '../components/message/MessageExcel'
-import MessageSetting from '../components/message/MessageSetting'
-import MessageQuestion from '../components/message/MessageQuestion'
+import Classes from '../components/classes/ClassesComponent'
 
-import OBick from  '../components/oBick/oBick'
 import Cookies from '../tools/vue-cookies';
 
 Vue.use(Router);
+
 
 let routes = [
     {
@@ -39,54 +34,48 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '賬戶管理',
+        name: '账户管理',
         iconCls: 'el-icon-d-caret',
         hidden: false,
         children: [
-            { path: 'admins', component: Admin, name: '縣府員工' ,hidden: true},
-            { path: 'company', component: Company, name: '營銷團隊' ,hidden: true},
-            { path: 'users', component: UserComponent, name: '臺東縣民' ,hidden: true},
-            { path: 'changeMobile', component: ChangeMobile, name: '手機轉碼' ,hidden: true},
+            { path: 'admins', component: Admin, name: '教务账户' ,hidden: true},
+            { path: 'classes', component: Classes, name: '班级管理' ,hidden: true},
             { path: 'changePass', component: ChangePass, name: '更換密碼' ,hidden: false},
         ]
     },
     {
         path: '/',
         component: Home,
-        name: '資料維護',
+        name: '书本管理',
         iconCls: 'el-icon-d-caret',
         hidden: true,
         children: [
-            { path: 'department', component: Deparment, name: '縣府單位',hidden: true },
-            { path: 'department/group', component: DeparmentGroup, name: '縣民群組' ,hidden: true}
+            { path: 'book', component: Book, name: '书籍管理'},
+            { path: 'book/order', component: BookOrder, name: '书籍订单'},
+            { path: 'book/detail/:id', component: BookDetail, name: '书籍详情',hidden:true}
         ]
     },
     {
         path: '/',
         component: Home,
-        name: '事件管理',
+        name: '学生用户管理',
         iconCls: 'el-icon-d-caret',
         hidden: true,
         children: [
-            { path: 'message/setting', component: MessageSetting, name: '推播設定' ,hidden: true},
-            { path: 'message/list', component: MessageList, name: '推播訊息' ,hidden: true},
-            { path: 'message/auto', component: MessageAuto, name: '自動推播訊息' ,hidden: true},
-            { path: 'message/question', component: MessageQuestion, name: '建立問卷' ,hidden: true},
-            { path: 'message/activity', component: MessageAcitvity, name: '建立活動',hidden: true },
-            { path: 'message/excel', component: MessageExcel, name: '產生報表' ,hidden: true}
+            { path: 'student/index', component: Student, name: '学生用户' },
+            { path: 'student/receive', component: StudentReceive, name: '学生领书记录' },
+            { path: 'student/detail/:id', component: StudentDetail, name: '学生详情' ,hidden:true},
         ]
     },{
         path: '/',
         component: Home,
-        name: '臺東金幣',
+        name: '教师用户管理',
         iconCls: 'el-icon-d-caret',
         hidden: true,
         children: [
-            { path: 'gold/account', component: GoldAccount, name: '金幣賬戶' ,hidden: true},
-            { path: 'gold/send', component: GoldSend, name: '金幣發放' ,hidden: true},
-            { path: 'goods/list', component: Goods, name: '商品兌換' ,hidden: true},
-            { path: 'oBick/voucher', component: OBick, name: 'oBike優惠券' ,hidden: true},
-            { path: 'gold/date', component: GoldDate, name: '請款期別' ,hidden: true}
+            { path: 'teacher/index', component: Teacher, name: '教师用户' },
+            { path: 'teacher/receive', component: TeacherReceive, name: '教师领书记录' },
+            { path: 'teacher/detail/:id', component: TeacherDetail, name: '教师详情' ,hidden:true},
         ]
     },
 ];

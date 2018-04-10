@@ -12,19 +12,21 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 class User extends Authenticatable
 {
     use Notifiable;
+    public $table = 'student';
+    public function __construct(array $attributes = [])
+    {
+        $type = request()->input('type');
+
+        $this->_getUserType($type);
+
+        parent::__construct($attributes);
+    }
 
     public function newQuery()
     {
         $query = $this->newBaseQueryBuilder();
         $builder = new class($query) extends Builder
         {
-
-            /**
-             * Create a new Eloquent query builder instance.
-             *
-             * @param  \Illuminate\Database\Query\Builder $query
-             * @return void
-             */
             public function __construct(QueryBuilder $query)
             {
 
@@ -57,6 +59,23 @@ class User extends Authenticatable
     public function getAuthIdentifierName()
     {
         return 'id';
+    }
+
+    private function _getUserType(string $type)
+    {
+        switch ($type) {
+            case 'student':
+                $this->table = 'student';
+                break;
+            case 'teacher':
+                $this->table = 'teacher';
+                break;
+            case 'admin':
+                $this->table = 'admin';
+                break;
+            default:
+                $this->table = 'student';
+        }
     }
 
     public function __get($name)
