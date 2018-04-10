@@ -4,10 +4,11 @@
     </div>
 </template>
 
+
 <style>
     .app-search-bg {
         background: #EEE;
-        padding: 2px;
+        padding: 10px;
     }
 
     .app-search {

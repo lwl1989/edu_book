@@ -11,7 +11,7 @@ import Axios from 'axios'
 import router from './router/index'
 import App from  './components/RouteComponent.vue'
 import VUE from 'vue'
-
+import 'element-ui/lib/theme-chalk/index.css'
 window.Vue = VUE;
 
 /**

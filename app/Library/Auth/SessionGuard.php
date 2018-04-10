@@ -31,15 +31,6 @@ class SessionGuard extends \Illuminate\Auth\SessionGuard
      */
     public function attempt(array $credentials = [], $remember = false)
     {
-        $type = $this->request->get('type');
-        if($type == 'student') {
-            $credentials['student_num'] = $credentials['account'];
-            unset($credentials['account']);
-        }
-        if($type == 'teacher') {
-            $credentials['teacher_num'] = $credentials['account'];
-            unset($credentials['account']);
-        }
         $this->fireAttemptEvent($credentials, $remember);
 
         $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);

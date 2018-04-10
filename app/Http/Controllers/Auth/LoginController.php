@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Library\Constant\StaticRoute;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -31,6 +33,8 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
+    protected $username = '';
+
     /**
      * Create a new controller instance.
      *
@@ -51,14 +55,6 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if ($this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-
-            return $this->sendLockoutResponse($request);
-        }
 
         if ($this->attemptLogin($request)) {
             return $this->sendLoginResponse($request);
@@ -69,26 +65,27 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
-        return $this->sendFailedLoginResponse($request);
+        $this->sendFailedLoginResponse($request);
     }
 
     /**
      * @param Request $request
-     * @return $this|array
+     * @return JsonResponse
      */
-    public function sendLoginResponse(Request $request) {
+    public function sendLoginResponse(Request $request) : JsonResponse{
         //這裏可以寫個多的邏輯
         $user = $this->guard()->user();
         if(strpos($request->path(),'api/')===0) {
             unset($user->password);
             return response()->json(['token'=>Crypt::encrypt($user->getAuthIdentifier()),'user'=>$user]);
         }else{
-            $router = StaticRoute::getPathFromName($user->permissions);
             $request->session()->regenerate();
 
             $this->clearLoginAttempts($request);
 
-            return response()->json($router)->withCookie(Cookie::forever('router', json_encode($router),null,null,false,false));
+            return response()->json(['code'=>0])
+                ->withCookie(Cookie::forever('type', $request->input('type','student'),null,null,false,false));
+//                ->withCookie(Cookie::forever('type',$request->input('type','student')));
         }
     }
 
@@ -105,5 +102,48 @@ class LoginController extends Controller
         $request->session()->invalidate();
 
         return redirect('/');
+    }
+
+
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+        ]);
+    }
+
+
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username() : string
+    {
+        if($this->username == '') {
+            $type = \request()->input('type','student');
+            $this->username = $type == 'student' ? 'student_num' : (
+            $type == 'teacher' ? 'teacher_num' : 'account'
+            );
+        }
+        return $this->username;
+    }
+
+
+    /**
+     * @param Request $request
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        throw ValidationException::withMessages(array_merge($request->all(),[
+            $this->username() => [trans('auth.failed')],
+        ]));
     }
 }

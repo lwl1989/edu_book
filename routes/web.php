@@ -1,82 +1,26 @@
 <?php
+//普通路由
+Route::get('login','Auth\LoginController@showLoginForm')->name('login');
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-Route::get('/', function () {
-    return view('welcome');
-});
-// test === /test    /test overwrite test
-Route::get('test', function () {
-        echo 'test';
-});
-Route::get('/test', function () {
-        echo 'test2';
-});
-Route::post('testPost', function () {
-        echo 'test';
-});
-//當get和post進行相同的處理的時候
-Route::match(['get','post'],'multi',function (){
-        echo "it's multi";
-});
-//當所有路由都同時請求的時候
-Route::any('any',function (){
-        echo "it's any";
-});
-//動態路由
-Route::get('user/{id}',function ($id) {
-        echo 'userId is '.$id;
-});
-//需要默認值的參數  使用問號
-Route::get('username/{username?}',function ($name = '張三') {
-        echo 'username is '.$name;
-});
-//動態參數的路由正則驗證
-Route::get('reg/{reg?}',function ($name = '張三') {
-        echo 'reg is '.$name;
-})->where('reg','[A-Za-z]+')
-;
-
-//多條件驗證
-Route::get('reg_multi/{regstr?}/{regnum?}',function (string $name = '張三', int $num = 5) {
-        echo 'reg is '.$name.' num is '.$num;
-})->where(['regstr'=>'[A-Za-z]+','regnum'=>'[0-9]+'])
-;
-
-//別名 ????? todo
-Route::get('f',function(){
-        //return route('f');
-        return 'fffff == f';
-});
-Route::get('fffff',['as'=>'f',function(){
-        return route('f');
-        //echo 'fffff == f';
-}]);
-
-
-//路由羣組
-Route::group(['prefix'=>'p'],function (){
-        Route::any('any',function (){
-                echo "it's prefix any";
-        });
-        Route::any('any1',function (){
-                echo "it's prefix any1";
-        });
-});
-
-//視圖
-Route::get('view',function (){
-        return view('view');
-});
-Auth::routes();
-
+Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+//不需要驗證登錄的接口路由
+Route::group(['middleware' => ['format'] ], function (){
+    Route::post('login','Auth\LoginController@login');
+});
+
+Route::group(['prefix'=>'book','middleware'=>['auth','format']], function (){
+
+    Route::get('count','Manager\AdminController@count');
+    Route::get('select','Manager\AdminController@select');
+    Route::post('create','Manager\AdminController@create');
+    Route::put('update','Manager\AdminController@update');
+    Route::delete('delete','Manager\AdminController@delete');
+
+
+    Route::get('routes','Manager\RouterController@getRouter');
+    Route::get('routes1','Manager\RouterController@getRouter1');
+});

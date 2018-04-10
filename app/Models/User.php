@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Cookie;
 
 class User extends Authenticatable
 {
@@ -16,7 +17,9 @@ class User extends Authenticatable
     public function __construct(array $attributes = [])
     {
         $type = request()->input('type');
-
+        if(empty($type)) {
+            $type = Cookie::get('type');
+        }
         $this->_getUserType($type);
 
         parent::__construct($attributes);

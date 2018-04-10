@@ -1,73 +1,54 @@
 <template>
-<div id="app">
-    <el-row class="home-header-every">
-        <el-col :span="3">
-            <div class="home-header">
-                <div class="home-span" @click="goToIndex">
-                    <span>TTPush</span>
+    <div id="app">
+        <el-row>
+            <el-col :span="24">
+                <div class="home-header">
+                    <div class="home-span" @click="goToIndex">
+                        <span>VueAdmin</span>
+                    </div>
+                    <div class="home-icon">
+                        <!-- <i class="el-icon-setting"></i> -->
+                        <el-dropdown split-button type="primary" @click="dialogTableVisible = true" @command="handleCommand">
+                            查看个人信息
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="login">退出登录</el-dropdown-item>
+                                <el-dropdown-item command="password">修改密码</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
-            </div>
-        </el-col>
-        <el-col :span="16">
-                    <el-menu
-                            :default-active="$route.path"
-                            unique-opened
-                            router
-                            mode="horizontal"
-                            class="el-button--primary-menu"
-                            background-color="#1D8CE0"
-                            text-color="#ffffff"
-                            active-text-color="#ffffff"
-                    >
-                        <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
-                            <el-submenu :index="index+''">
-                                <template slot="title">
-                                    {{index}}. {{item.name}}
-                                </template>
-                                <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">
-                                    {{child.name}}
-                                </el-menu-item>
-                            </el-submenu>
-                        </template>
-                    </el-menu>
-        </el-col>
-        <el-col :span="5">
-            <div class="home-header">
-                <div class="home-icon">
-                    <!-- <i class="el-icon-setting"></i> -->
-                    <el-dropdown split-button type="primary" @click="dialogTableVisible = true" @command="handleCommand">
-                        查看個人信息
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="login">退出登錄</el-dropdown-item>
-                            <el-dropdown-item command="password">修改密碼</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-            </div>
-        </el-col>
-    </el-row>
-
-    <el-row>
-        <el-col :span="24">
-
-        <div class="home-header-breadcrumb">
-            <el-breadcrumb separator="/" class="breadcrumb-inner">
-                <el-breadcrumb-item :to="{ path: '/home' }">TTPush</el-breadcrumb-item>
-                <el-breadcrumb-item v-for="(item, index) in $route.matched" :key="index">
-                {{ item.name }}
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        </el-col>
-    </el-row>
-
-    <el-row>
-        <el-col :span="24">
-            <router-view></router-view>
-        </el-col>
-
-    </el-row>
-</div>
+            </el-col>
+            <el-col :span="24">
+                <aside class="menu-expanded">
+                    <!--导航菜单-->
+                    <div class="home-header-menu" :style="{ height: menuHeight + 'px' }">
+                        <el-menu :default-active="$route.path" unique-opened router>
+                            <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
+                                <el-submenu :index="index+''" v-if="!item.leaf" :key="index">
+                                    <template slot="title">
+                                        <i :class="item.iconCls"></i>{{item.name}}</template>
+                                    <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
+                                </el-submenu>
+                            </template>
+                        </el-menu>
+                    </div>
+                </aside>
+                <section class="content-container" :style="{ width: contentWidth + 'px' }">
+                    <div class="home-header-breadcrumb">
+                        <el-breadcrumb separator="/" class="breadcrumb-inner">
+                            <el-breadcrumb-item :to="{ path: '/echarts' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item v-for="(item, index) in $route.matched" :key="index">
+                                {{ item.name }}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <div class="home-header-router" :style="{ height: routerHeight + 'px' }">
+                        <router-view></router-view>
+                    </div>
+                </section>
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
 <script>
@@ -116,88 +97,72 @@ export default {
 </script>
 
 <style>
-.el-button--primary-menu {
-    padding:0;
-    margin:0;
-    height: 60px;
-}
-.el-button--primary {
-    background: #1D8CE0;
-}
-.el-button--primary-menu i {
-    color:#ffffff;
-}
+    .el-button--primary {
+        background: #1D8CE0;
+    }
 
-.home-header-every {
-    width: 100%;
-    height: 60px;
-    padding: 0;
-    margin: 0 auto;
-    background: #1D8CE0;
-}
+    .home-header {
+        width: 100%;
+        height: 50px;
+        padding: 5px 0;
+        background: #1D8CE0;
+    }
 
-.home-header {
-    width: 100%;
-    height: 50px;
-    padding: 5px 0;
-    background: #1D8CE0;
-}
+    .home-span {
+        float: left;
+        cursor: pointer;
+    }
 
-.home-span {
-    float: left;
-    cursor: pointer;
-}
+    .home-span span {
+        line-height: 50px;
+        font-size: 24px;
+        color: #FFF;
+        margin-left: 20px;
+    }
 
-.home-span span {
-    line-height: 50px;
-    font-size: 24px;
-    color: #FFF;
-    margin-left: 20px;
-}
+    .home-icon {
+        float: right;
+        margin-right: 20px;
+        line-height: 50px;
+        cursor: pointer;
+    }
 
-.home-icon {
-    float: right;
-    margin-right: 20px;
-    line-height: 50px;
-    cursor: pointer;
-}
+    .home-icon i {
+        color: #FFF;
+    }
 
-.home-icon i {
-    color: #FFF;
-}
+    .home-header-menu {
+        background: #eff1f6;
+    }
 
-.home-header-menu {
-    background: #eff1f6;
-}
+    .menu-expanded {
+        width: 230px;
+        float: left;
+    }
 
-.menu-expanded {
-    width: 230px;
-    float: left;
-}
+    .content-container {
+        float: left;
+    }
 
-.content-container {
-    float: left;
-}
+    .home-header-breadcrumb {
+        width: 100%;
+        height: 20px;
+        padding: 20px;
+        background: #FFF;
+    }
 
-.home-header-breadcrumb {
-    width: 100%;
-    height: 20px;
-    padding: 20px;
-    background: #FFF;
-}
+    .home-header-router {
+        width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+        background: #FFF;
+    }
 
-.home-header-router {
-    width: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
-    background: #FFF;
-}
+    .el-menu {
+        border-radius: 0;
+    }
 
-.el-menu {
-    border-radius: 0;
-}
-
-.el-breadcrumb__item {
-    line-height: 20px;
-}
+    .el-breadcrumb__item {
+        line-height: 20px;
+    }
 </style>
