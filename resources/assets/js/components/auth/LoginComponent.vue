@@ -38,14 +38,14 @@
             openSuccess(callback){
                 this.$message({
                     type: 'success',
-                    message: '登录'
+                    message: '添加成功'
                 });
                 callback();
             },
             openWarning(str){
                 this.$message({
                     type: 'warning',
-                    message: '登录失败，请检查账户'
+                    message: str
                 });
             },
             login() {

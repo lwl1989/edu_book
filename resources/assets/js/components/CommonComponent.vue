@@ -43,7 +43,7 @@
                         </el-breadcrumb>
                     </div>
                     <div class="home-header-router" :style="{ height: routerHeight + 'px' }">
-                        <router-view></router-view>
+                        <router-view v-on:refresh="openRefresh" v-on:success="openSuccess" v-on:warning="openWarning"></router-view>
                     </div>
                 </section>
             </el-col>
@@ -75,6 +75,46 @@ export default {
     * 显示个人信息弹出层
     */
     methods: {
+        openSuccess(callback){
+            this.$message({
+                type: 'success',
+                message: '添加成功'
+            });
+            callback();
+        },
+        openWarning(callback){
+            this.$message({
+                type: 'warning',
+                message: '添加失败，请检查数据'
+            });
+            callback();
+        },
+        openRefresh(message, callback) {
+            let h = this.$createElement;
+            this.$msgbox({
+                title: '提示',
+                message: h('p', null, [
+                    h('span', null, message)
+                ]),
+                showCancelButton: true,
+                confirmButtonText: '確定',
+                cancelButtonText: '取消',
+                beforeClose: (action, instance, done) => {
+                    if (action === 'confirm') {
+                        callback();
+                        done();
+                    } else {
+                        done();
+                    }
+                },
+            }).then(action => {
+                //執行完畢
+                //console.log(action);
+            }).catch(e => {
+                //執行異常
+                //console.log(e)
+            });
+        },
         handleClick() {
 
         },

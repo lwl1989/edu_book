@@ -78,7 +78,7 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof Responsable) {
             return $e->toResponse($request);
         }
-        var_dump($e->getTraceAsString());exit();
+        //var_dump($e->getTraceAsString());exit();
         $e = $this->prepareException($e);
 
         if ($e instanceof HttpResponseException) {
