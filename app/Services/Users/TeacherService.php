@@ -14,5 +14,6 @@ use App\Services\ServiceBasic;
 
 class TeacherService extends ServiceBasic
 {
+    use UserReceiveTrait;
     protected $model = Teacher::class;
 }
