@@ -105,7 +105,8 @@
             return {
                 id: this.$route.params.id,
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+                    'Content-Type': 'multipart/form-data'
                 },
                 book: {
                     // 'name', 'sn', 'author', 'company',

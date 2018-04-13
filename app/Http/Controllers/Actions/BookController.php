@@ -76,7 +76,7 @@ class BookController extends Controller
     {
         $id = $request->input('id', 0);
         if ($id == 0) {
-            return [];
+            return ['code'=>1];
         }
         $book = new BookService();
         return ['row' => $book->delete($id)];
