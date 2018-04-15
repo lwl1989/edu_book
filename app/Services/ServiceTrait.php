@@ -41,6 +41,18 @@ trait ServiceTrait
         $this->attr[$key] = $value;
         return $this;
     }
+
+    /**
+     * @param string $key
+     * @return string|array
+     */
+    public function getAttr(string $key = '')
+    {
+        if(!empty($key)) {
+            return $this->attr[$key]??'';
+        }
+        return $this->attr;
+    }
     /**
      * @param $id
      * @return int
@@ -115,7 +127,9 @@ trait ServiceTrait
         }
 
         $query = $model::query();
+        $table = $model->getTable();
         foreach ($conditions as $field=>$operate) {
+            $field = $table.'.'.$field;
             if(is_array($operate)) {
                 if(count($operate) == 2) {
                     $query->where($field, $operate[0], $operate[1]);
@@ -179,6 +193,15 @@ trait ServiceTrait
     {
         $service = self::_getInstance();
         return $service->getModel();
+    }
+
+    /**
+     * @param  string
+     */
+    protected static function setSelfModel(string $model)
+    {
+        $service = self::_getInstance();
+        $service->setModel($model);
     }
 
     /**

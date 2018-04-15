@@ -20,5 +20,11 @@ Route::group(['prefix'=>'book','middleware'=>['format']], function (){
     Route::post('create','Actions\BookController@create');
     Route::post('update','Actions\BookController@update');
     Route::delete('delete','Actions\BookController@delete');
-    
+
+    Route::get('plan/count','Actions\BookController@planCount');
+    Route::get('plan/select','Actions\BookController@selectPlan');
+    Route::get('plan/get','Actions\BookController@plan');
+    Route::post('plan/create','Actions\BookController@createPlan');
+    Route::post('plan/update','Actions\BookController@updatePlan');
+    Route::delete('plan/delete','Actions\BookController@deletePlan');
 });
