@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Actions;
 
 
+use App\Exceptions\ErrorConstant;
 use App\Http\Controllers\Controller;
 use App\Library\ArrayParse;
 use App\Services\AdminService;
@@ -126,5 +127,24 @@ class AdminController extends Controller
     public function count()
     {
         return ['count' => AdminService::count([], false, 1)];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function changePassword(Request $request) : array
+    {
+        try {
+            $params = ArrayParse::checkParamsArray(['oldPassword', 'newPassword', 'confirmPassword'], $request->input());
+        } catch (\Exception $exception) {
+            return ['code' => $exception->getCode()];
+        }
+
+        if($params['newPassword'] != $params['confirmPassword']) {
+            return ['code'=> ErrorConstant::PARAMS_ERROR];
+        }
+
+        return ['code'=> AdminService::changePassword($params) ? 0 : ErrorConstant::SYSTEM_ERR];
     }
 }

@@ -75,19 +75,40 @@ export default {
     * 显示个人信息弹出层
     */
     methods: {
-        openSuccess(callback){
-            this.$message({
-                type: 'success',
-                message: '添加成功'
+        logout() {
+            this.$confirm('確認要退出登錄嗎？', '提示', {
+                confirmButtonText: '確定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                window.location.href = '/logout';
+            }).catch(() => {
+
             });
-            callback();
         },
-        openWarning(callback){
+        changePass() {
+            this.$router.push({ path: '/changePass' })
+        },
+        openSuccess(callback,message){
+            if(typeof(message) == 'undefined') {
+                message = '操作成功'
+            }
+            this.openDialog('success',callback,message);
+        },
+        openWarning(callback,message){
+            if(typeof(message) == 'undefined') {
+                message = '操作失敗，請檢查'
+            }
+            this.openDialog('warning',callback,message);
+        },
+        openDialog(type,callback,message) {
             this.$message({
-                type: 'warning',
-                message: '添加失败，请检查数据'
+                type: type,
+                message: message
             });
-            callback();
+            if(typeof(callback) == 'function') {
+                callback();
+            }
         },
         openRefresh(message, callback) {
             let h = this.$createElement;
@@ -108,6 +129,7 @@ export default {
                     }
                 },
             }).then(action => {
+
                 //執行完畢
                 //console.log(action);
             }).catch(e => {

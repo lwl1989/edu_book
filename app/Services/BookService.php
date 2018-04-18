@@ -62,6 +62,7 @@ class BookService extends ServiceBasic
         $field = array_merge($field, ['book.name','book.sn','book.cost'],
             ['book_plan.plan_year','book_plan.up_down','book.created_at as plan_created','book.updated_at as plan_updated']);
 
+
         $list = $query
             ->join('book_plan',function($query){
                 /** @var JoinClause $query */

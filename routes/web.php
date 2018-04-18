@@ -11,6 +11,16 @@ Route::get('/home', 'Actions\AdminController@index')->name('home');
 Route::group(['middleware' => ['format'] ], function (){
     Route::post('login','Auth\LoginController@login');
 });
+
+Route::group(['prefix'=>'admin','middleware'=>['auth','format']], function (){
+    Route::get('count','Manager\AdminController@count');
+    Route::get('select','Manager\AdminController@select');
+    Route::post('create','Manager\AdminController@create');
+    Route::put('update','Manager\AdminController@update');
+    Route::delete('delete','Manager\AdminController@delete');
+
+    Route::post('change/password','Manager\AdminController@changePassword');
+});
 //'auth',
 Route::group(['prefix'=>'book','middleware'=>['format']], function (){
 
