@@ -116,10 +116,34 @@ class BookController extends Controller
 
     public function countPlan(Request $request)
     {
+        return ['count' => BookService::countPlan([], false, 1)];
+    }
 
+    public function countOrder(Request $request)
+    {
+        return ['count' => BookService::countOrder([], false, 1)];
     }
 
     public function selectPlan(Request $request)
+    {
+        $page = $request->input('page', 1);
+        $limit = $request->input('limit', 10);
+
+        $conditions = [];
+
+        $filed = $request->input('field',false);
+        if($filed !== false) {
+            $fields = explode(',',$filed);
+            if(is_array($fields)) {
+                BookService::setSelfListField($fields);
+            }
+        }
+
+        $book = BookService::orderLimit($conditions, $limit, $page, false, 1);
+        return ['list' => $book];
+    }
+
+    public function selectOrder(Request $request)
     {
         $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);

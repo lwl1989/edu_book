@@ -120,4 +120,32 @@ class BookService extends ServiceBasic
         self::setSelfModel(BookOrder::class);
         return parent::delete($id);
     }
+
+    /**
+     * @param array $conditions
+     * @param bool $deleted
+     * @param int $status
+     * @return int
+     */
+    public static function countPlan(array $conditions, bool $deleted = false, int $status = -1) : int
+    {
+        self::setSelfModel(BookPlan::class);
+        $query = self::_getQuery($conditions, $deleted, $status);
+        $count = $query->count();
+        return intval($count);
+    }
+
+    /**
+     * @param array $conditions
+     * @param bool $deleted
+     * @param int $status
+     * @return int
+     */
+    public static function countOrder(array $conditions, bool $deleted = false, int $status = -1) : int
+    {
+        self::setSelfModel(BookOrder::class);
+        $query = self::_getQuery($conditions, $deleted, $status);
+        $count = $query->count();
+        return intval($count);
+    }
 }

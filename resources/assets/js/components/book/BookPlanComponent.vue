@@ -33,7 +33,7 @@
                     </el-table-column>
                     <el-table-column prop="plan_year" label="年份">
                     </el-table-column>
-                    <el-table-column prop="up_down" label="学期(上/下)">
+                    <el-table-column prop="up_down" label="学期(上/下)"  :formatter="upDownFormat"  >
                     </el-table-column>
                     <el-table-column prop="created_at" label="创建时间">
                     </el-table-column>
@@ -105,6 +105,18 @@
                     type: 'warning',
                     message: '操作失敗，請重試'
                 });
+            },
+            upDownFormat(item,field) {
+                let value = item["up_down"];
+                if (value == 0) {
+                    return "全年"
+                }
+                if (value == 1) {
+                    return "上学期"
+                }
+                if (value == 2) {
+                    return "下学期"
+                }
             },
             openRefresh(message,callback){
                 let h = this.$createElement;
