@@ -10,6 +10,8 @@ import ChangePass from  '../components/admin/ChangePassComponent'
 import Book from '../components/book/BookComponent'
 import BookDetail from '../components/book/BookDetailComponent'
 import BookOrder from '../components/book/BookOrderComponent'
+import BookPlan from '../components/book/BookPlanComponent'
+import BookPlanDetail from '../components/book/BookPlanDetailComponent'
 
 import Teacher from '../components/teacher/TeacherComponent'
 import TeacherReceive from '../components/teacher/TeacherReceiveComponent'
@@ -178,7 +180,9 @@ if (type == 'student') {
             children: [
                 { path: '/book', component: Book, name: '书籍管理'},
                 { path: '/book/order', component: BookOrder, name: '书籍订单'},
-                { path: '/book/detail/:id', component: BookDetail, name: '书籍详情',hidden:true}
+                { path: '/book/detail/:id', component: BookDetail, name: '书籍详情',hidden:true},
+                { path: '/book/order', component: BookPlan, name: '学年计划'},
+                { path: '/book/detail/:id', component: BookPlanDetail, name: '计划详情',hidden:true}
             ]
         },
         {
