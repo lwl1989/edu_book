@@ -21,19 +21,21 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="sn" label="书籍sn">
-                    </el-table-column>
                     <el-table-column prop="name" label="书籍名称">
                     </el-table-column>
-                    <el-table-column prop="company" label="出版社">
+                    <el-table-column prop="number" label="计划数量">
                     </el-table-column>
-                    <el-table-column prop="author" label="作者">
+                    <el-table-column prop="number" label="计划数量">
                     </el-table-column>
                     <el-table-column prop="cost" label="标注价格">
                     </el-table-column>
-                    <el-table-column prop="created_at" label="创建时间">
+                    <el-table-column prop="price" label="班级">
                     </el-table-column>
-                    <el-table-column prop="updated_at" label="修改时间">
+                    <el-table-column prop="plan_year" label="年份">
+                    </el-table-column>
+                    <el-table-column prop="up_down" label="学期(上/下)">
+                    </el-table-column>
+                    <el-table-column prop="created_at" label="创建时间">
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -70,7 +72,7 @@
         methods: {
             getMaxPage() {
                 let that = this;
-                axios.get('/book/count')
+                axios.get('/book/plan/count')
                     .then(function (response) {
                         that.total = response.data.response.count;
                     })
@@ -83,7 +85,7 @@
 
             handleCurrentChange(currentPage) {
                 let that = this;
-                axios.get('/book/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
+                axios.get('/book/plan/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
                     that.book = response.data.response.list;
                 }).catch(function (error) {
                     that.openRefresh('網絡不穩定，是否重試？',function () {
