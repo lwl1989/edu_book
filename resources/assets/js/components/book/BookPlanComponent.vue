@@ -148,7 +148,7 @@
 
             },
             addBook(){
-                this.$router.push({path:'/book/detail/0'});
+                this.$router.push({path:'/book/plan/detail/0'});
             },
         }
 

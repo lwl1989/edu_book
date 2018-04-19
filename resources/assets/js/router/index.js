@@ -182,7 +182,7 @@ if (type == 'student') {
                 { path: '/book/order', component: BookOrder, name: '书籍订单'},
                 { path: '/book/detail/:id', component: BookDetail, name: '书籍详情',hidden:true},
                 { path: '/book/plan', component: BookPlan, name: '学年计划'},
-                { path: '/book/detail/:id', component: BookPlanDetail, name: '计划详情',hidden:true}
+                { path: '/book/plan/detail/:id', component: BookPlanDetail, name: '计划详情',hidden:true}
             ]
         },
         {

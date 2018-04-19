@@ -16,6 +16,7 @@ trait ServiceTrait
     protected $attr;
     protected $listField = ['*'];
     protected $detailField = ['*'];
+    protected $searchField = 'name';
 
     public function getOne($id) : array
     {
@@ -121,6 +122,8 @@ trait ServiceTrait
     {
         $service = self::_getInstance();
         $model = $service->getModelInstance();
+
+
         $conditions['deleted'] = ['=',$deleted ? 1 : 0];
         if($status != -1) {
             $conditions['status'] = ['=',$status];
@@ -130,6 +133,11 @@ trait ServiceTrait
         $table = $model->getTable();
         foreach ($conditions as $field=>$operate) {
             $field = $table.'.'.$field;
+            if($field == $table.'.keyword') {
+                $field = $table.'.'.$service->searchField;
+                $query->where($field, 'like', '%'.$operate.'%');
+                continue;
+            }
             if(is_array($operate)) {
                 if(count($operate) == 2) {
                     $query->where($field, $operate[0], $operate[1]);

@@ -52,6 +52,14 @@ const bookRule = {
     stock:[{require:true,type:'number', message:'必须填写正确的数字'}],
     reserve:[{require:false,type:'number', message:'必须填写正确的数字'}],
 };
+const bookPlanRule = {
+    name: [{ required: true, message:'书籍名称必须填写'}, { min: 0, max: 50, message: '书籍名称长度不能超过 50 个字符'}],
+    sn:[{ required: true, message: '书籍sn必须填写'},{ min: 0, max: 50, message: 'sn长度不能超过 50 个字符'}],
+    // price:[{require:false,type:'number', message:'必须填写正确的数字',trigger: 'blur'}],
+    cost:[{require:true,validator:naturalNumberValidator, message:'必须填写正确的数字'}],
+    stock:[{require:true,type:'number', message:'必须填写正确的数字'}],
+    reserve:[{require:false,type:'number', message:'必须填写正确的数字'}],
+};
 const teacherRule = {
     student_num: [{ required: true, message: '教师编号不能为空'}, { min: 6, max: 30, message: '长度需要在 6 到 30 个字符'}], //, trigger: 'blur'
     name: [{ required: true}, { min: 0, max: 20, message: '姓名长度不能超过 20 个字符'}],
@@ -64,6 +72,7 @@ const adminRule = {
 };
 
 export let BookRule = bookRule;
+export let BookPlanRule = bookPlanRule;
 export let AdminRule = adminRule;
 export let AdminSearchRule = adminSearchRule;
 export let StudentRule = studentRule;

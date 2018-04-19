@@ -1,146 +1,265 @@
 <template>
     <div id="app">
-        <!-- 商品查詢列 -->
-        <el-row>
+        <el-form :model="plan" :rules="rules" ref="plan" label-width="150px" size="small">
 
-        </el-row>
-        <!--  商品按鈕列 -->
-        <el-row>
-            <el-col :span="24" style="margin-top: 20px;">
-                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增书籍</el-button>
-                <el-button type="primary" icon="el-icon-document">导出excel</el-button>
-            </el-col>
-        </el-row>
-        <!--  商品Table列 -->
-        <el-row>
-            <el-col :span="24" style="margin-top: 20px;">
-                <el-table :data="book" stripe style="width: 100%" v-loading="loading">
-                    <el-table-column type="selection">
-                    </el-table-column>
-                    <el-table-column
-                            type="index"
-                            width="50">
-                    </el-table-column>
-                    <el-table-column prop="sn" label="书籍sn">
-                    </el-table-column>
-                    <el-table-column prop="name" label="书籍名称">
-                    </el-table-column>
-                    <el-table-column prop="company" label="出版社">
-                    </el-table-column>
-                    <el-table-column prop="author" label="作者">
-                    </el-table-column>
-                    <el-table-column prop="cost" label="标注价格">
-                    </el-table-column>
-                    <el-table-column prop="created_at" label="创建时间">
-                    </el-table-column>
-                    <el-table-column prop="updated_at" label="修改时间">
-                    </el-table-column>
-                </el-table>
-            </el-col>
+            <el-form-item label="书籍名称" prop="book_id">
+                <el-select
+                        v-model="plan.book_id"
+                        filterable
+                        remote
+                        reserve-keyword
+                        placeholder="请输入关键词"
+                        :remote-method="getBooks"
+                        :loading="loading">
+                    <el-option
+                            v-for="item in books"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
 
-            <el-col :span="24" v-if="total > 0">
-                <div class="app-pagination">
-                    <el-pagination  @current-change="handleCurrentChange" :current-page="currentPage"  :page-size="pageSize" layout="total, prev, pager, next" :total="total">
-                    </el-pagination>
-                </div>
-            </el-col>
-        </el-row>
+            <el-form-item label="预购数量" prop="number">
+                <el-col :span="16">
+                    <el-input v-model="plan.number" ></el-input>
+                </el-col>
+            </el-form-item>
+
+            <el-form-item label="笔记本数量" prop="note_book_num">
+                <el-col :span="12">
+                    <el-input v-model="plan.note_book_num" ></el-input>
+                </el-col>
+            </el-form-item>
+
+            <el-form-item label="班级" prop="classes">
+                <el-col :span="24">
+                    <el-checkbox-group v-model="checkedClass">
+                        <el-checkbox v-for="c in classes" :label="c.name" :key="c.id" :value="c.id">{{c.name}}</el-checkbox>
+                    </el-checkbox-group>
+                </el-col>
+            </el-form-item>
+
+            <el-form-item label="原价" prop="cost">
+                <el-col :span="12">
+                    <el-input v-model="book.cost" ></el-input>
+                </el-col>
+            </el-form-item>
+
+
+            <el-form-item label="目前库存" prop="stock">
+                <el-col :span="6">
+                    <el-input-number v-model="book.stock" ></el-input-number>
+                </el-col>
+            </el-form-item>
+
+
+            <el-form-item label="预留库存" prop="stock">
+                <el-col :span="6">
+                    <el-input-number v-model="book.stock" ></el-input-number>
+                </el-col>
+                <el-col :span="4">
+                    &nbsp;
+                </el-col>
+                <el-col :span="12">
+                    <span>在出库时，库存必须大于这个值</span>
+                </el-col>
+            </el-form-item>
+
+
+
+        </el-form>
+
+        <div slot="footer" style="text-align: center;">
+            <el-row>
+                <el-col :span="4">
+                    &nbsp;
+                </el-col>
+                <el-col :span="8">
+                    <el-button @click="goBack" size="small">返回列表</el-button>
+                </el-col>
+                <el-col :span="8">
+                    <el-button type="primary" @click="doSubmit" size="small">確 定</el-button>
+                </el-col>
+                <el-col :span="4">
+                    &nbsp;
+                </el-col>
+            </el-row>
+        </div>
+
     </div>
 </template>
 
 <script>
+    import {BookPlanRule} from '../../tools/element-ui-validate';
     export default {
-        name: "goods-list",
+        name: "book-detail",
         data: function () {
             return {
-                currentPage: 1,
-                pageSize: 15,
-                total: 1,
-                loading: true,
-                book: []
+                id: this.$route.params.id,
+                books:[],
+                classes:[],
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
+                    'Content-Type': 'multipart/form-data'
+                },
+                book: {
+                    // 'name', 'sn', 'author', 'company',
+                    // 'price', 'cost', 'stock', 'reserve', 'mobile', 'email', 'permissions'
+                    id: 0,
+                    name: '',
+                    sn: '',
+                    cost: '',
+                    stock: 0,
+                    reserve: 0,
+                },
+                plan:{
+                    id:0,
+                    book_id:0,
+                    number:0,
+                    note_book_num:0,
+                    classes:[
+                        1
+                    ],
+                    plan_year:"",
+                    up_down:""
+                },
+                rules: BookPlanRule,
+                again:0,
+                loading: false,
+                checkedClass:[]
             }
+        },
+        created : function() {
+
         },
         mounted: function () {
             this.$nextTick(function() {
-                this.getMaxPage();
-                this.handleCurrentChange(1);
-                this.loading = false;
-            })
+                this.getClasses();
+                if (this.id != 0) {
+                    this.getBookPlan();
+                }
+            });
         },
         methods: {
-            getMaxPage() {
+            getBooks(query){
                 let that = this;
-                axios.get('/book/count')
-                    .then(function (response) {
-                        that.total = response.data.response.count;
-                    })
-                    .catch(function (error) {
-                        that.openRefresh('網絡不穩定，是否重試？',function () {
-                            window.location.reload(true)
-                        });
+                if(query !== '') {
+                    axios.get('/book/select?keyword='+query).then(function (response) {
+                        that.books = response.data.response.list;
+                    }).catch(function (error) {
+                        that.books = []
                     });
+                }else{
+                    that.books = []
+                }
             },
-
-            handleCurrentChange(currentPage) {
+            getChecked(){
                 let that = this;
-                axios.get('/book/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
-                    that.book = response.data.response.list;
+                this.classes.forEach(function(item){
+                    if(that.plan.classes.indexOf(item.id) !== -1) {
+                        that.checkedClass.push(item)
+                    }
+                });
+            },
+            getClasses(){
+                let that = this;
+                axios.get('/class/select?limit=999').then(function (response) {
+                    that.classes = response.data.response.list;
+                    that.getChecked();
                 }).catch(function (error) {
-                    that.openRefresh('網絡不穩定，是否重試？',function () {
+                    that.classes = []
+                });
+            },
+            openPlanSuccess(callback){
+                this.$emit('success',callback);
+            },
+            openPlanWarning(callback){
+                this.$emit('warning',callback);
+            },
+            resetPage(){
+                this.again = 0;
+            },
+            closePlan(message){
+                let that = this;
+                this.$emit('refresh',message, function () {
+                    that.$router.push({path:'/book'})
+                });
+            },
+            goBack(){
+                this.closePlan('直接返回将不会保存本页数据，是否返回？');
+            },
+            doSubmit() {
+                let h = this.$createElement;
+                let that = this;
+                // 表单验证方法
+                this.$refs.plan.validate(function (result) {
+                    if(result){
+                        this.$msgbox({
+                            title: '提示',
+                            message: h('p', null, [
+                                h('span', null,  '确定提交本计划？')
+                            ]),
+                            showCancelButton: true,
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            beforeClose: (action, instance, done) => {
+                                let callback = function(){
+                                    instance.confirmButtonLoading = false;
+                                    instance.confirmButtonText = '确定';
+                                    done();
+                                };
+                                if (action === 'confirm') {
+                                    instance.confirmButtonLoading = true;
+                                    instance.confirmButtonText = '提交中...';
+
+                                    let url = that.id == 0 ? '/book/plan/create' : '/book/plan/update';
+
+                                    axios.post(url,that.book)
+                                        .then(function (response) {
+                                            if(response.data.code == 0) {
+                                                that.openPlanSuccess(callback)
+                                            }else{
+                                                that.openPlanWarning(callback);
+                                            }
+                                        }).catch(function (error) {
+                                        that.openPlanWarning(callback);
+                                    });
+                                } else {
+                                    that.openPlanWarning(callback);
+                                }
+                            }
+                        });
+                    }else{
+                        console.log(result)
+                    }
+                }.bind(this));
+            },
+            getBookPlan() {
+                let that = this;
+                axios.get('/book/plan/get?id=' + this.id).then(function (response) {
+                    if (response.data.code == 0) {
+                        that.book = response.data.response.data
+                    } else {
+                        that.closePlan('未獲取到本页數據,是否關閉頁面？');
+                    }
+                }).catch(function (error) {
+                    that.openPlanDetailRefresh('網絡不穩定，是否重試？', function () {
                         window.location.reload(true)
                     });
                 });
             },
-            openBLSuccess(callback){
-                this.$message({
-                    type: 'success',
-                    message: '操作成功'
-                });
-                callback();
-            },
-            openBLWarning(){
-                this.$message({
-                    type: 'warning',
-                    message: '操作失敗，請重試'
-                });
-            },
-            openRefresh(message,callback){
-                let h = this.$createElement;
-                this.$msgbox({
-                    title: '提示',
-                    message: h('p', null, [
-                        h('span', null, message)
-                    ]),
-                    showCancelButton: true,
-                    confirmButtonText: '確定',
-                    cancelButtonText: '取消',
-                    beforeClose: (action,instance,done) => {
-                        if (action === 'confirm') {
-                            callback();
-                        }else {
-                            done();
-                        }
-                    },
-                }).then(action => {
-                    this.$message({
-                        type: 'info',
-                        message: 'action: ' + action
-                    });
-                }).catch(e=>{
-                    //console.log(e)
-                });
-            },
-            offSale(){
-
-            },
-            addBook(){
-                this.$router.push({path:'/book/detail/0'});
-            },
+            openPlanDetailRefresh(message, callback) {
+                this.$emit("refresh",message,callback)
+            }
         }
 
     }
 </script>
 
 <style scoped>
-
+    .el-form{
+        width: 70%;
+        margin: 0 auto;
+    }
 </style>

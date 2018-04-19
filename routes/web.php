@@ -45,3 +45,14 @@ Route::group(['prefix'=>'book','middleware'=>['format']], function (){
     Route::post('order/update','Actions\BookController@updateOrder');
     Route::delete('order/delete','Actions\BookController@deleteOrder');
 });
+
+Route::group(['prefix'=>'class','middleware'=>['format']], function (){
+
+    Route::get('count','Actions\ClassesController@count');
+    Route::get('select','Actions\ClassesController@select');
+    Route::get('get','Actions\ClassesController@get');
+    Route::post('create','Actions\ClassesController@create');
+    Route::post('update','Actions\ClassesController@update');
+    Route::delete('delete','Actions\ClassesController@delete');
+    
+});

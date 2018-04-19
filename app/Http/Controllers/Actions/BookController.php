@@ -30,9 +30,12 @@ class BookController extends Controller
     {
         $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);
-
         $conditions = [];
 
+        $keyword = $request->input('keyword', '');
+        if(!empty($keyword)) {
+            $conditions['keyword'] = $keyword;
+        }
         $filed = $request->input('field',false);
         if($filed !== false) {
             $fields = explode(',',$filed);
