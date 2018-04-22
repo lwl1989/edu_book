@@ -31,12 +31,12 @@ Route::group(['prefix'=>'book','middleware'=>['format']], function (){
     Route::post('update','Actions\BookController@update');
     Route::delete('delete','Actions\BookController@delete');
 
-    Route::get('plan/count','Actions\BookController@countPlan');
-    Route::get('plan/select','Actions\BookController@selectPlan');
-    Route::get('plan/get','Actions\BookController@plan');
-    Route::post('plan/create','Actions\BookController@createPlan');
-    Route::post('plan/update','Actions\BookController@updatePlan');
-    Route::delete('plan/delete','Actions\BookController@deletePlan');
+    Route::get('plan/count','Actions\PlanController@count');
+    Route::get('plan/select','Actions\PlanController@select');
+    Route::get('plan/get','Actions\PlanController@get');
+    Route::post('plan/create','Actions\PlanController@create');
+    Route::post('plan/update','Actions\PlanController@update');
+    Route::delete('plan/delete','Actions\PlanController@delete');
 
     Route::get('order/count','Actions\BookController@countOrder');
     Route::get('order/select','Actions\BookController@selectOrder');

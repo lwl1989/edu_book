@@ -18,9 +18,9 @@ class BookController extends Controller
             return [];
         }
 
-        $book = Book::find($id);
+        $book = new BookService();
 
-        return ['data'=>$book];
+        return ['data'=>$book->getOne($id)];
     }
     /**
      * @param Request $request

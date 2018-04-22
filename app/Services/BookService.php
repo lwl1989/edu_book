@@ -13,6 +13,7 @@ use App\Exceptions\LogicException;
 use App\Models\Book\Book;
 use App\Models\Book\BookOrder;
 use App\Models\Book\BookPlan;
+use App\Models\Classes\Classes;
 use Illuminate\Database\Query\JoinClause;
 
 class BookService extends ServiceBasic
@@ -42,6 +43,27 @@ class BookService extends ServiceBasic
             ->get(self::getSelfListField())
             ->toArray();
 
+        if(!empty($list)) {
+            $classesIds = [];
+            foreach ($list as &$v) {
+                if(!empty($v['classes']) and !is_array($v['classes'])) {
+                    $v['classes'] = json_decode($v['classes']);
+                }
+                $classesIds += $v['classes'];
+            }
+            $classes = Classes::query()->whereIn('id', $classesIds)->limit(count($classesIds))->get(['id','name'])->toArray();
+            $classes = array_column($classes, 'name','id');
+            foreach ($list as &$v) {
+                $classesList = [];
+                if(!empty($v['classes'])) {
+                    foreach ($v['classes'] as $id) {
+                        $classesList[] = $classes[$id];
+                    }
+                }
+                $v['class_list'] = implode($classesList,'、');
+            }
+
+        }
         return $list;
     }
 
@@ -79,18 +101,31 @@ class BookService extends ServiceBasic
         return $list;
     }
 
+    /**
+     * 創建書籍計劃
+     * @return int
+     */
     public function createPlan(): int
     {
         self::setSelfModel(BookPlan::class);
         return parent::create();
     }
 
+    /**
+     * 創建書籍訂單
+     * @return int
+     */
     public function createOrder() : int
     {
         self::setSelfModel(BookOrder::class);
         return parent::create();
     }
 
+    /**
+     * 更新书籍计划
+     * @param $id
+     * @return int
+     */
     public function updatePlan($id): int
     {
         self::setSelfModel(BookPlan::class);
@@ -100,6 +135,11 @@ class BookService extends ServiceBasic
         return parent::update($id);
     }
 
+    /**
+     * 更新订单
+     * @param $id
+     * @return int
+     */
     public function updateOrder($id): int
     {
         self::setSelfModel(BookOrder::class);
@@ -109,12 +149,22 @@ class BookService extends ServiceBasic
         return parent::update($id);
     }
 
+    /**
+     * 删除计划
+     * @param $id
+     * @return int
+     */
     public function deletePlan($id) : int
     {
         self::setSelfModel(BookPlan::class);
         return parent::delete($id);
     }
 
+    /**
+     * 删除订单
+     * @param $id
+     * @return int
+     */
     public function deleteOrder($id) : int
     {
         self::setSelfModel(BookOrder::class);
@@ -147,5 +197,29 @@ class BookService extends ServiceBasic
         $query = self::_getQuery($conditions, $deleted, $status);
         $count = $query->count();
         return intval($count);
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public static function getOnePlan($id) : array
+    {
+        self::setSelfModel(BookPlan::class);
+        $model = self::getModelInstance();
+        $data = $model->newQuery()->find($id);
+        return empty($data) ? [] : $data->toArray();
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public static function getOneOrder($id) : array
+    {
+        self::setSelfModel(BookPlan::class);
+        $model = self::getModelInstance();
+        $data = $model->newQuery()->find($id);
+        return empty($data) ? [] : $data->toArray();
     }
 }

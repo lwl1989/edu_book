@@ -8,7 +8,7 @@
                         filterable
                         remote
                         reserve-keyword
-                        placeholder="请输入关键词"
+                        placeholder="请输入书籍名称关键词"
                         :remote-method="getBooks"
                         :loading="loading">
                     <el-option
@@ -32,6 +32,20 @@
                 </el-col>
             </el-form-item>
 
+            <el-form-item label="计划使用年份" prop="plan_year">
+                <el-col :span="12">
+                    <el-input v-model="plan.plan_year" ></el-input>
+                </el-col>
+            </el-form-item>
+
+            <el-form-item label="全年/上/下学期" prop="up_down">
+                <el-select v-model="plan.up_down">
+                    <el-option key="0" label="全年" value="0"></el-option>
+                    <el-option key="1" label="上学期" value="1"></el-option>
+                    <el-option key="2" label="下学期" value="2"></el-option>
+                </el-select>
+            </el-form-item>
+
             <el-form-item label="班级" prop="classes">
                 <el-col :span="24">
                     <el-checkbox-group v-model="checkedClass">
@@ -39,33 +53,6 @@
                     </el-checkbox-group>
                 </el-col>
             </el-form-item>
-
-            <el-form-item label="原价" prop="cost">
-                <el-col :span="12">
-                    <el-input v-model="book.cost" ></el-input>
-                </el-col>
-            </el-form-item>
-
-
-            <el-form-item label="目前库存" prop="stock">
-                <el-col :span="6">
-                    <el-input-number v-model="book.stock" ></el-input-number>
-                </el-col>
-            </el-form-item>
-
-
-            <el-form-item label="预留库存" prop="stock">
-                <el-col :span="6">
-                    <el-input-number v-model="book.stock" ></el-input-number>
-                </el-col>
-                <el-col :span="4">
-                    &nbsp;
-                </el-col>
-                <el-col :span="12">
-                    <span>在出库时，库存必须大于这个值</span>
-                </el-col>
-            </el-form-item>
-
 
 
         </el-form>
@@ -103,26 +90,16 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content'),
                     'Content-Type': 'multipart/form-data'
                 },
-                book: {
-                    // 'name', 'sn', 'author', 'company',
-                    // 'price', 'cost', 'stock', 'reserve', 'mobile', 'email', 'permissions'
-                    id: 0,
-                    name: '',
-                    sn: '',
-                    cost: '',
-                    stock: 0,
-                    reserve: 0,
-                },
                 plan:{
                     id:0,
-                    book_id:0,
+                    book_id:"",
                     number:0,
                     note_book_num:0,
                     classes:[
                         1
                     ],
-                    plan_year:"",
-                    up_down:""
+                    plan_year:0,
+                    up_down:"0"
                 },
                 rules: BookPlanRule,
                 again:0,
@@ -135,6 +112,8 @@
         },
         mounted: function () {
             this.$nextTick(function() {
+                let now = new Date();
+                this.plan.plan_year = now.getFullYear();
                 this.getClasses();
                 if (this.id != 0) {
                     this.getBookPlan();
@@ -194,6 +173,7 @@
                 let that = this;
                 // 表单验证方法
                 this.$refs.plan.validate(function (result) {
+                    console.log(that.plan);
                     if(result){
                         this.$msgbox({
                             title: '提示',
@@ -215,7 +195,7 @@
 
                                     let url = that.id == 0 ? '/book/plan/create' : '/book/plan/update';
 
-                                    axios.post(url,that.book)
+                                    axios.post(url,that.plan)
                                         .then(function (response) {
                                             if(response.data.code == 0) {
                                                 that.openPlanSuccess(callback)

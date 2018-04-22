@@ -21,7 +21,8 @@ trait ServiceTrait
     public function getOne($id) : array
     {
         $model = self::getModelInstance();
-        return $model->newQuery()->find($id, self::getSelfDetailField())->toArray();
+        $data = $model->newQuery()->find($id, self::getSelfDetailField());
+        return empty($data) ? [] : $data->toArray();
     }
     /**
      * @param $id

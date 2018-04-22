@@ -7,7 +7,7 @@
         <!--  商品按鈕列 -->
         <el-row>
             <el-col :span="24" style="margin-top: 20px;">
-                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增书籍</el-button>
+                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增书籍计划单</el-button>
                 <el-button type="primary" icon="el-icon-document">导出excel</el-button>
             </el-col>
         </el-row>
@@ -29,7 +29,7 @@
                     </el-table-column>
                     <el-table-column prop="cost" label="标注价格">
                     </el-table-column>
-                    <el-table-column prop="price" label="班级">
+                    <el-table-column prop="class_list" label="班级">
                     </el-table-column>
                     <el-table-column prop="plan_year" label="年份">
                     </el-table-column>
