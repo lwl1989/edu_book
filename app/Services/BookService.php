@@ -219,8 +219,18 @@ class BookService extends ServiceBasic
     {
         self::setSelfModel(BookPlan::class);
         $model = self::getModelInstance();
-        $data = $model->newQuery()->find($id);
-        return empty($data) ? [] : $data->toArray();
+        $data = $model->newQuery()
+            ->join('book',function($query){
+                $query->on('book.id','=','book_plan.id');
+            })
+            ->find($id);
+
+        if(empty($data)) {
+            return $data;
+        }
+        $data = $data->toArray();
+        $data['classes'] = json_decode($data['classes'],true);
+        return $data;
     }
 
     /**

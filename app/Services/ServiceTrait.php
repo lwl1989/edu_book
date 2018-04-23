@@ -31,7 +31,7 @@ trait ServiceTrait
     public function delete($id) : int
     {
         $model = self::getModelInstance();
-        return $model->newQuery()->where('id',$id)->update(['deleted',1]);
+        return $model->newQuery()->where('id',$id)->update(['deleted'=>1]);
     }
     /**
      * @param string $key

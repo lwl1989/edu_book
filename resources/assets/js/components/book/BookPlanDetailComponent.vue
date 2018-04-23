@@ -7,8 +7,9 @@
                         v-model="plan.book_id"
                         filterable
                         remote
+                        width="500"
                         reserve-keyword
-                        placeholder="请输入书籍名称关键词"
+                        :placeholder="search_book"
                         :remote-method="getBooks"
                         :loading="loading">
                     <el-option
@@ -48,8 +49,8 @@
 
             <el-form-item label="班级" prop="classes">
                 <el-col :span="24">
-                    <el-checkbox-group v-model="checkedClass">
-                        <el-checkbox v-for="c in classes" :label="c.name" :key="c.id" :value="c.id">{{c.name}}</el-checkbox>
+                    <el-checkbox-group v-model="plan.classes">
+                        <el-checkbox v-for="c in classes" :label="c.id" :key="c.id" :value="c.id">{{c.name}}</el-checkbox>
                     </el-checkbox-group>
                 </el-col>
             </el-form-item>
@@ -101,6 +102,7 @@
                     plan_year:0,
                     up_down:"0"
                 },
+                search_book:"请输入书籍名(模糊搜索)",
                 rules: BookPlanRule,
                 again:0,
                 loading: false,
@@ -219,7 +221,8 @@
                 let that = this;
                 axios.get('/book/plan/get?id=' + this.id).then(function (response) {
                     if (response.data.code == 0) {
-                        that.book = response.data.response.data
+                        that.book = response.data.response.data;
+                        that.search_book = that.book.name;
                     } else {
                         that.closePlan('未獲取到本页數據,是否關閉頁面？');
                     }

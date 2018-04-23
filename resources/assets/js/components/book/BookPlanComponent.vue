@@ -7,8 +7,7 @@
         <!--  商品按鈕列 -->
         <el-row>
             <el-col :span="24" style="margin-top: 20px;">
-                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增书籍计划单</el-button>
-                <el-button type="primary" icon="el-icon-document">导出excel</el-button>
+                <el-button type="primary" icon="el-icon-goods" @click="addBookPlan">新增书籍计划单</el-button>
             </el-col>
         </el-row>
         <!--  商品Table列 -->
@@ -21,28 +20,41 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="name" label="书籍名称">
+                    <el-table-column prop="name" label="书籍名称" width="200" :show-overflow-tooltip=true>
                     </el-table-column>
-                    <el-table-column prop="number" label="计划数量">
+                    <el-table-column prop="number" label="计划数量" width="80">
                     </el-table-column>
-                    <el-table-column prop="number" label="计划数量">
+                    <el-table-column prop="stock" label="库存" width="80">
                     </el-table-column>
-                    <el-table-column prop="cost" label="标注价格">
+                    <el-table-column prop="cost" label="标注价格" width="80">
                     </el-table-column>
-                    <el-table-column prop="class_list" label="班级">
+                    <el-table-column prop="class_list" label="使用班级" width="200" :show-overflow-tooltip=true>
                     </el-table-column>
-                    <el-table-column prop="plan_year" label="年份">
+                    <el-table-column prop="plan_year" label="年份" width="80">
                     </el-table-column>
-                    <el-table-column prop="up_down" label="学期(上/下)"  :formatter="upDownFormat"  >
+                    <el-table-column prop="up_down" label="学期(上/下)"  :formatter="upDownFormat" width="80" >
                     </el-table-column>
-                    <el-table-column prop="created_at" label="创建时间">
+                    <el-table-column prop="created_at" label="创建时间" width="150">
+                    </el-table-column>
+
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button  size="small"  type="primary"
+                                        @click="editBookPlan(scope.row, scope.$index)">
+                                编辑计划
+                            </el-button>
+                            <el-button size="small" v-if="scope.row.status < 2"
+                                       type="warning" @click="deleteBookPlan(scope.row, scope.$index)">
+                                删除计划
+                            </el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-col>
 
             <el-col :span="24" v-if="total > 0">
                 <div class="app-pagination">
-                    <el-pagination  @current-change="handleCurrentChange" :current-page="currentPage"  :page-size="pageSize" layout="total, prev, pager, next" :total="total">
+                    <el-pagination  @current-change="handlePlanCurrentChange" :current-page="currentPage"  :page-size="pageSize" layout="total, prev, pager, next" :total="total">
                     </el-pagination>
                 </div>
             </el-col>
@@ -64,33 +76,33 @@
         },
         mounted: function () {
             this.$nextTick(function() {
-                this.getMaxPage();
-                this.handleCurrentChange(1);
+                this.getPlanMaxPage();
+                this.handlePlanCurrentChange(1);
                 this.loading = false;
             })
         },
         methods: {
-            getMaxPage() {
+            getPlanMaxPage() {
                 let that = this;
                 axios.get('/book/plan/count')
                     .then(function (response) {
                         that.total = response.data.response.count;
                     })
                     .catch(function (error) {
-                        that.openRefresh('網絡不穩定，是否重試？',function () {
+                        that.$emit('refresh',function () {
                             window.location.reload(true)
-                        });
+                        },'網絡不穩定，是否重試？');
                     });
             },
 
-            handleCurrentChange(currentPage) {
+            handlePlanCurrentChange(currentPage) {
                 let that = this;
                 axios.get('/book/plan/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
                     that.book = response.data.response.list;
                 }).catch(function (error) {
-                    that.openRefresh('網絡不穩定，是否重試？',function () {
+                    that.$emit('refresh',function () {
                         window.location.reload(true)
-                    });
+                    },'網絡不穩定，是否重試？');
                 });
             },
             openBLSuccess(callback){
@@ -118,36 +130,28 @@
                     return "下学期"
                 }
             },
-            openRefresh(message,callback){
-                let h = this.$createElement;
-                this.$msgbox({
-                    title: '提示',
-                    message: h('p', null, [
-                        h('span', null, message)
-                    ]),
-                    showCancelButton: true,
-                    confirmButtonText: '確定',
-                    cancelButtonText: '取消',
-                    beforeClose: (action,instance,done) => {
-                        if (action === 'confirm') {
-                            callback();
-                        }else {
-                            done();
-                        }
-                    },
-                }).then(action => {
-                    this.$message({
-                        type: 'info',
-                        message: 'action: ' + action
+            editBookPlan(item,index){
+                this.$router.push({path:'/book/plan/detail/'+item.id});
+            },
+            deleteBookPlan(item,index){
+                let that = this;
+                axios.delete('/book/plan/delete?id='+item.id) .then(function (response) {
+                    if(response.data.code == 0) {
+                        that.$emit('success',function () {
+                            that.book.splice(index,1);
+                        });
+                    }else{
+                        that.$emit('warning',function () {
+                            console.log(response)
+                        });
+                    }
+                }).catch(function (error) {
+                    that.$emit('warning',function () {
+                        console.log(error)
                     });
-                }).catch(e=>{
-                    //console.log(e)
                 });
             },
-            offSale(){
-
-            },
-            addBook(){
+            addBookPlan(){
                 this.$router.push({path:'/book/plan/detail/0'});
             },
         }

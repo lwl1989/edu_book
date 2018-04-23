@@ -20,19 +20,29 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="sn" label="书籍sn">
+                    <el-table-column prop="sn" label="书籍sn" width="150" :show-overflow-tooltip=true>
                     </el-table-column>
-                    <el-table-column prop="name" label="书籍名称">
+                    <el-table-column prop="name" label="书籍名称" width="150" :show-overflow-tooltip=true>
                     </el-table-column>
-                    <el-table-column prop="company" label="出版社">
+                    <el-table-column prop="company" label="出版社" width="150">
                     </el-table-column>
-                    <el-table-column prop="author" label="作者">
+                    <el-table-column prop="author" label="作者" width="120">
                     </el-table-column>
-                    <el-table-column prop="cost" label="标注价格">
+                    <el-table-column prop="cost" label="标注价格" width="100">
                     </el-table-column>
-                    <el-table-column prop="created_at" label="创建时间">
+                    <el-table-column prop="created_at" label="创建时间" width="150">
                     </el-table-column>
-                    <el-table-column prop="updated_at" label="修改时间">
+                    <el-table-column  label="操作">
+                        <template slot-scope="scope">
+                            <el-button  size="small"
+                                       type="edit" @click="editBook(scope.row, scope.$index)">
+                                编辑书籍
+                            </el-button>
+                            <el-button size="small"
+                                       type="warning" @click="deleteBook(scope.row, scope.$index)">
+                                删除书籍
+                            </el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -129,8 +139,26 @@
                     //console.log(e)
                 });
             },
-            offSale(){
-
+            editBook(item,index){
+                this.$router.push({path:'/book/detail/'+item.id});
+            },
+            deleteBook(item,index){
+                let that = this;
+                axios.delete('/book/delete?id='+item.id) .then(function (response) {
+                    if(response.data.code == 0) {
+                        that.$emit('success',function () {
+                            that.book.splice(index,1);
+                        });
+                    }else{
+                        that.$emit('warning',function () {
+                            console.log(response)
+                        });
+                    }
+                }).catch(function (error) {
+                    that.$emit('warning',function () {
+                        console.log(error)
+                    });
+                });
             },
             addBook(){
                 this.$router.push({path:'/book/detail/0'});
