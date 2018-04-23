@@ -33,10 +33,19 @@ class BookService extends ServiceBasic
     public static function planLimit(array $conditions, int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
     {
         self::setSelfModel(BookPlan::class);
+        $keyword = "";
+        if(isset($conditions['keyword'])) {
+            $keyword = $conditions['keyword'];
+            unset($conditions['keyword']);
+        }
+
         $query = self::_getQuery($conditions, $deleted, $status);
         $list = $query
-            ->join('book',function($query){
+            ->join('book',function($query) use($keyword){
                 $query->on('book.id', '=', 'book_plan.book_id');
+                if(!empty($keyword)) {
+                    $query->where('book.name','like', "%{$keyword}%");
+                }
             })
             ->skip(($page-1)*$limit)
             ->take($limit)
@@ -61,6 +70,7 @@ class BookService extends ServiceBasic
                     }
                 }
                 $v['class_list'] = implode($classesList,'、');
+                $v['name'] = sprintf('%s-%s-%s',$v['name'],$v['plan_year'],self::getUpDownString($v['up_down']));
             }
 
         }
@@ -81,9 +91,11 @@ class BookService extends ServiceBasic
         self::setSelfModel(BookOrder::class);
         $query = self::_getQuery($conditions, $deleted, $status);
         $field = self::getSelfListField();
+        if(count($field) == 1) {
+            $field[0] = 'book_order.*';
+        }
         $field = array_merge($field, ['book.name','book.sn','book.cost'],
             ['book_plan.plan_year','book_plan.up_down','book.created_at as plan_created','book.updated_at as plan_updated']);
-
 
         $list = $query
             ->join('book_plan',function($query){
@@ -221,5 +233,21 @@ class BookService extends ServiceBasic
         $model = self::getModelInstance();
         $data = $model->newQuery()->find($id);
         return empty($data) ? [] : $data->toArray();
+    }
+
+    /**
+     * @param $upDown
+     * @return string
+     */
+    public static function getUpDownString($upDown) : string
+    {
+        if($upDown == 1) {
+            return '上学期';
+        }
+        if($upDown == 2) {
+            return '下学期';
+        }
+
+        return '全学年';
     }
 }

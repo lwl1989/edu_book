@@ -36,7 +36,7 @@
                             <el-button v-if="scope.row.state == false" size="small" type="danger" @click="eventStateUpdate(scope.row, scope.$index)">隐藏</el-button>
                         </template>
                     </el-table-column>
-                    </el-table-column>
+
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button size="small" icon="edit" @click="handleEdit(scope.row)">编辑</el-button>

@@ -9,13 +9,13 @@ use App\Models\Book\Book;
 use App\Services\BookService;
 use Illuminate\Http\Request;
 
-class PlanController extends Controller
+class OrderController extends Controller
 {
 
 
     public function count(Request $request)
     {
-        return ['count' => BookService::countPlan([], false, 1)];
+        return ['count' => BookService::countOrder([], false, 1)];
     }
 
     public function select(Request $request)
@@ -24,10 +24,7 @@ class PlanController extends Controller
         $limit = $request->input('limit', 10);
 
         $conditions = [];
-        $keyword = $request->input('keyword', '');
-        if(!empty($keyword)) {
-            $conditions['keyword'] = $keyword;
-        }
+
         $filed = $request->input('field',false);
         if($filed !== false) {
             $fields = explode(',',$filed);
@@ -36,7 +33,7 @@ class PlanController extends Controller
             }
         }
 
-        $book = BookService::planLimit($conditions, $limit, $page, false, 1);
+        $book = BookService::orderLimit($conditions, $limit, $page, false, 1);
 
         return ['list' => $book];
     }
@@ -49,7 +46,7 @@ class PlanController extends Controller
             return [];
         }
 
-        return ['data'=>BookService::getOnePlan($id)];
+        return ['data'=>BookService::getOneOrder($id)];
     }
 
     public function create(Request $request) : array
@@ -69,7 +66,7 @@ class PlanController extends Controller
             $book->setAttr($key, $value);
         }
 
-        return ['id' => $book->createPlan(), 'create_time' => $time, 'update_time' => $time];
+        return ['id' => $book->createOrder(), 'create_time' => $time, 'update_time' => $time];
     }
 
     public function update(Request $request) : array
@@ -89,7 +86,7 @@ class PlanController extends Controller
         foreach ($params as $key => $value) {
             $book->setAttr($key, $value);
         }
-        return ['row' => $book->updatePlan($id)];
+        return ['row' => $book->updateOrder($id)];
     }
 
     public function delete(Request $request) : array
@@ -101,6 +98,6 @@ class PlanController extends Controller
 
         $book = new BookService();
 
-        return ['row'=>$book->deletePlan($id)];
+        return ['row'=>$book->deleteOrder($id)];
     }
 }

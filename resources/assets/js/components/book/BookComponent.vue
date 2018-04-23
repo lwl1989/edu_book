@@ -8,7 +8,6 @@
         <el-row>
             <el-col :span="24" style="margin-top: 20px;">
                 <el-button type="primary" icon="el-icon-goods" @click="addBook">新增书籍</el-button>
-                <el-button type="primary" icon="el-icon-document">导出excel</el-button>
             </el-col>
         </el-row>
         <!--  商品Table列 -->
