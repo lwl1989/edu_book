@@ -23,6 +23,8 @@ import StudentReceive from '../components/student/StudentReceiveComponent'
 import StudentDetail from '../components/student/StudentDetailComponent'
 
 import Classes from '../components/classes/ClassesComponent'
+import ClassDetail from  '../components/classes/ClassesDetailComponent'
+
 
 import Cookies from '../tools/vue-cookies';
 
@@ -169,6 +171,7 @@ if (type == 'student') {
             children: [
                 { path: '/admins', component: Admin, name: '教务账户' ,hidden: false},
                 { path: '/classes', component: Classes, name: '班级管理' ,hidden: false},
+                { path: '/classes/detail/:id', component: ClassDetail, name: '班级详情',hidden:true},
                 { path: '/changePass', component: ChangePass, name: '更換密碼' ,hidden: false},
             ]
         },

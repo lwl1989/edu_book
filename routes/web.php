@@ -46,7 +46,7 @@ Route::group(['prefix'=>'book','middleware'=>['format']], function (){
     Route::delete('order/delete','Actions\OrderController@delete');
 });
 
-Route::group(['prefix'=>'class','middleware'=>['format']], function (){
+Route::group(['prefix'=>'classes','middleware'=>['format']], function (){
 
     Route::get('count','Actions\ClassesController@count');
     Route::get('select','Actions\ClassesController@select');

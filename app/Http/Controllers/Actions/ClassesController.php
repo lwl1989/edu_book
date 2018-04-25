@@ -74,6 +74,12 @@ class ClassesController extends Controller
         return ['list' => $class];
     }
 
+    public function count(Request $request)
+    {
+        $class = ClassesService::count([], false, -1);
+        return ['list' => $class];
+    }
+
     public function get(Request $request)
     {
         $id = $this->_checkId($request);

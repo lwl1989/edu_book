@@ -75,7 +75,10 @@ const adminRule = {
     name: [{ required: true}, { min: 0, max: 20, message: '姓名长度不能超过 20 个字符'}],
     password:[{ required: true}, {  min: 6, max: 30,  message: '长度需要在 6 到 30 个字符'}],
 };
-
+const classRule = {
+    name: [{ required: true, message:'名称必须填写'}, { min: 0, max: 50, message: '名称长度不能超过 50 个字符'}],
+};
+export let ClassRule = classRule;
 export let BookRule = bookRule;
 export let BookPlanRule = bookPlanRule;
 export let BookOrderRule = bookOrderRule;
