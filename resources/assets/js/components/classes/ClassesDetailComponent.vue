@@ -77,7 +77,6 @@
                 let that = this;
                 axios.get('/classes/get?id='+that.id).then(function (response) {
                     that.classes = response.data.response.data;
-                    console.log(response)
                 }).catch(function (error) {
 
                 });
