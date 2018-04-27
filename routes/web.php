@@ -56,3 +56,25 @@ Route::group(['prefix'=>'classes','middleware'=>['format']], function (){
     Route::delete('delete','Actions\ClassesController@delete');
     
 });
+
+Route::group(['prefix'=>'student','middleware'=>['format']], function (){
+
+        Route::get('count','Actions\StudentController@count');
+        Route::get('select','Actions\StudentController@select');
+        Route::get('get','Actions\StudentController@get');
+        Route::post('create','Actions\StudentController@create');
+        Route::post('update','Actions\StudentController@update');
+        Route::delete('delete','Actions\StudentController@delete');
+
+});
+
+Route::group(['prefix'=>'teacher','middleware'=>['format']], function (){
+
+        Route::get('count','Actions\TeacherController@count');
+        Route::get('select','Actions\TeacherController@select');
+        Route::get('get','Actions\TeacherController@get');
+        Route::post('create','Actions\TeacherController@create');
+        Route::post('update','Actions\TeacherController@update');
+        Route::delete('delete','Actions\TeacherController@delete');
+
+});

@@ -14,6 +14,6 @@ use App\Services\ServiceBasic;
 
 class TeacherService extends ServiceBasic
 {
-    use UserReceiveTrait;
     protected $model = Teacher::class;
+    protected $listField = ['id','name','created_at'];
 }
