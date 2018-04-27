@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body id="lia-body">
+    <div class="lia-content">
+        <div class="inputwrapper">
+            <label><span>姓名：</span><input type="text" name="fullname"></label>
+            <div class="result"></div>
+        </div>
+    </div>
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+	var start = new Date();
+	var code = "";
+	$(document).keydown(function(e){
+		  var now = new Date();
+		  var tCode = parseInt(e.keyCode);
+		  if (now - start > 30) {
+				start = now;
+				//goto request book
+				code = String.fromCharCode(e.keyCode);
+		  } else {
+				if((tCode > 47 && tCode < 58) || (tCode > 64 && tCode < 91) || (tCode > 96 && tCode < 123)) {
+						//0-9 a-z A-Z
+						code += String.fromCharCode(e.keyCode);
+				//		console.log(code);
+				}
+
+		  }
+		  
+		  if((tCode == 40 || tCode == 13) && code != "") {
+			console.log("goto request book");
+			code = "";
+		  }	
+　　});
+/**
+        $(function(){
+            var $inputwrapper = $('#lia-body .lia-content .inputwrapper');
+            $inputwrapper.find('input').on('input propertychange',function(){
+                var result = $(this).val();
+                console.log(result);
+                $inputwrapper.find('.result').html(result);
+            });
+        })*/
+    </script>
+</body>
+</html>
