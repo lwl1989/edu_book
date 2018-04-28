@@ -13,12 +13,11 @@ class StudentController extends Controller
         public function create(Request $request)
         {
                 try {
-                        $params = ArrayParse::checkParamsArray(['name', 'excepted_count'],
+                        $params = ArrayParse::checkParamsArray(['name', 'class_id','student_num'],
                                 $request->input());
                 } catch (\Exception $exception) {
                         return ['code' => $exception->getCode()];
                 }
-                $params['student_count'] = 0;
 
                 $time = date('Y-m-d H:i:s', time());
                 $book = new StudentService();
@@ -31,7 +30,7 @@ class StudentController extends Controller
 
         public function update(Request $request)
         {
-                if($params = $this->_check($request, ['name', 'excepted_count','student_count'])){
+                if(!($params = $this->_check($request,['name', 'class_id','student_num']))) {
                         return ['code'=>1];
                 }
 

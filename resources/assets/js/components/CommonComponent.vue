@@ -93,15 +93,15 @@ export default {
             if(typeof(message) == 'undefined') {
                 message = '操作成功'
             }
-            this.openDialog('success',callback,message);
+            this.openDialog('success', callback, message);
         },
         openWarning(callback,message){
             if(typeof(message) == 'undefined') {
                 message = '操作失敗，請檢查'
             }
-            this.openDialog('warning',callback,message);
+            this.openDialog('warning', callback, message);
         },
-        openDialog(type,callback,message) {
+        openDialog(type, callback, message) {
             this.$message({
                 type: type,
                 message: message

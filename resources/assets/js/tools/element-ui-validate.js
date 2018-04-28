@@ -40,9 +40,9 @@ const adminSearchRule = {
 };
 const studentRule = {
     student_num: [{ required: true, message: '学生学号不能为空'}, { min: 6, max: 30, message: '长度需要在 6 到 30 个字符'}], //, trigger: 'blur'
-    name: [{ required: true}, { min: 0, max: 20, message: '姓名长度不能超过 20 个字符'}],
-    class_id :[ {required: true}, {message:'学生班级必须进行选择'}],
-    password:[{ required: true}, {  min: 6, max: 30,  message: '长度需要在 6 到 30 个字符'}],
+    name: [{ required: true,message:'学生姓名不能为空'}, { min: 0, max: 20, message: '姓名长度不能超过 20 个字符'}],
+    class_id :[ {required: true,message:'必须选择班级'}],
+   // password:[{ required: true}, {  min: 6, max: 30,  message: '长度需要在 6 到 30 个字符'}],
 };
 const bookRule = {
     name: [{ required: true, message:'书籍名称必须填写'}, { min: 0, max: 50, message: '书籍名称长度不能超过 50 个字符'}],

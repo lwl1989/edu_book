@@ -145,7 +145,7 @@
             },
             getClasses(){
                 let that = this;
-                axios.get('/class/select?limit=999').then(function (response) {
+                axios.get('/classes/select?limit=999').then(function (response) {
                     that.classes = response.data.response.list;
                     that.getChecked();
                 }).catch(function (error) {
