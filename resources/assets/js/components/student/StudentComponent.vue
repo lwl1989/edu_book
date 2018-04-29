@@ -40,7 +40,7 @@
                                 编辑学生
                             </el-button>
                             <el-button  size="small"
-                                        type="edit" @click="editStudent(scope.row, scope.$index)">
+                                        type="edit" @click="testStudent(scope.row, scope.$index)">
                                 领&nbsp;&nbsp;&nbsp;&nbsp;书
                             </el-button>
                             <el-button size="small"
@@ -140,21 +140,17 @@
                 this.$refs.detail.studentShow(id)
             },
             addStudentList(item){
-                console.log(item);
                 this.student.push(item);
             },
             editStudentList(item){
                 let index = -1;
-                this.student.forEach(function (v,key) {
-                    if(v.id === item.id) {
+                this.student.forEach(function (value, key) {
+                    if(value.id == item.id) {
                         index = key;
                     }
                 });
-                if(index !== -1) {
-                    console.log(this.student)
-                    this.student[index] = item;
-                    console.log(this.student)
-                }
+                this.student[index].name = item.name;
+                this.student[index].student_num = item.student_num;
             }
         },
     }
