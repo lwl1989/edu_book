@@ -15,8 +15,13 @@
                 receives:[],
                 rules:{},
                 showReceive:false,
-                editId:0
+                editId:0,
+                code:"",
+                start:new Date()
             }
+        },
+        mounted() {
+            document.body.onkeydown = this.keyDown
         },
         methods:{
             studentReceiveShow(editId){
@@ -25,6 +30,25 @@
                     //get
                 }
                 this.showReceive = true;
+            },
+            keyDown(e) {
+                let now = new Date();
+                let tCode = parseInt(e.keyCode);
+                if (now - this.start > 10000) {
+                    this.start = now;
+                    this.code  = String.fromCharCode(e.keyCode);
+                } else {
+                    if((tCode > 47 && tCode < 58) || (tCode > 64 && tCode < 91) || (tCode > 96 && tCode < 123)) {
+                        //0-9 a-z A-Z
+                        this.code += String.fromCharCode(e.keyCode);
+                    }
+
+                }
+
+                if((tCode === 40 || tCode === 13) && this.code != "") {
+                    console.log("goto request book");
+                    this.code = "";
+                }
             },
             studentReceiveHide(){
                 this.showReceive = false;

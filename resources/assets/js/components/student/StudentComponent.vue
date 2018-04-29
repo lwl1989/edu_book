@@ -36,11 +36,11 @@
                     <el-table-column  label="操作">
                         <template slot-scope="scope">
                             <el-button  size="small"
-                                        type="edit" @click="editStudent(scope.row, scope.$index)">
+                                        type="primary" @click="editStudent(scope.row, scope.$index)">
                                 编辑学生
                             </el-button>
                             <el-button  size="small"
-                                        type="edit" @click="testStudent(scope.row, scope.$index)">
+                                        type="danger" @click="listReceive(scope.row, scope.$index)">
                                 领&nbsp;&nbsp;&nbsp;&nbsp;书
                             </el-button>
                             <el-button size="small"
@@ -96,9 +96,9 @@
                         that.total = response.data.response.count;
                     })
                     .catch(function (error) {
-                        that.openRefresh('網絡不穩定，是否重試？',function () {
+                        that.$emit('refresh',function () {
                             window.location.reload(true)
-                        });
+                        },'網絡不穩定，是否重試？');
                     });
             },
             handleStudentCurrentChange(currentPage) {
@@ -106,9 +106,9 @@
                 axios.get('/student/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
                     that.student = response.data.response.list;
                 }).catch(function (error) {
-                    that.openRefresh('網絡不穩定，是否重試？',function () {
+                    that.$emit('refresh',function () {
                         window.location.reload(true)
-                    });
+                    },'網絡不穩定，是否重試？');
                 });
             },
             editStudent(item, index){
