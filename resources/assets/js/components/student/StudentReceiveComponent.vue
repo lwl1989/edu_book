@@ -17,11 +17,18 @@
                 showReceive:false,
                 editId:0,
                 code:"",
-                start:new Date()
+                start:new Date(),
+                books:[]
             }
         },
-        mounted() {
-            document.body.onkeydown = this.keyDown
+        watch:{
+            showReceive(current, old){
+                if(current === true) {
+                    document.body.onkeydown = this.keyDown
+                }else{
+                    document.body.onkeydown = null
+                }
+            }
         },
         methods:{
             studentReceiveShow(editId){
@@ -31,6 +38,7 @@
                 }
                 this.showReceive = true;
             },
+
             keyDown(e) {
                 let now = new Date();
                 let tCode = parseInt(e.keyCode);
@@ -42,13 +50,19 @@
                         //0-9 a-z A-Z
                         this.code += String.fromCharCode(e.keyCode);
                     }
-
                 }
 
                 if((tCode === 40 || tCode === 13) && this.code != "") {
-                    console.log("goto request book");
+                    this.getBookFromSn(this.code);
                     this.code = "";
                 }
+            },
+            getBookFromSn(sn){
+                axios.get('/book/get?sn='+sn) .then(function (response) {
+                    this.books.push(response.data.response.data);
+                }).catch(function (error) {
+
+                });
             },
             studentReceiveHide(){
                 this.showReceive = false;

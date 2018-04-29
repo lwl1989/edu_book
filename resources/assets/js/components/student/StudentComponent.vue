@@ -24,7 +24,7 @@
                     <el-table-column prop="name" label="学生名称(点击查看领书记录)" >
                         <template slot-scope="scope">
                             <el-button  size="small"
-                                        type="text" @click="listReceive(scope.row, scope.$index)">
+                                        type="text" @click="listReceived(scope.row, scope.$index)">
                                 {{scope.row.name}}
                             </el-button>
                         </template>
@@ -62,15 +62,17 @@
 
         <student-detail ref="detail" v-on:add="addStudentList" v-on:edit="editStudentList"></student-detail>
         <student-receive ref="receive"></student-receive>
+        <student-received ref="received"></student-received>
     </div>
 </template>
 
 <script>
     import StudentDetail from "./StudentDetailComponent";
     import StudentReceive from "./StudentReceiveComponent";
+    import StudentReceived from "./StudentReceivedComponent";
     export default {
         name: "StudentComponent",
-        components: {StudentReceive, StudentDetail},
+        components: {StudentReceive, StudentDetail,StudentReceived},
         data: function () {
             return {
                 currentPage: 1,
@@ -116,6 +118,9 @@
             },
             listReceive(item){
                 this.$refs.receive.studentReceiveShow(item.id)
+            },
+            listReceived(item){
+                this.$refs.received.studentReceiveShow(item.id)
             },
             deleteStudent(item, index) {
                 let that = this;

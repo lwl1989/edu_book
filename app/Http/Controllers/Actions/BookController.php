@@ -14,13 +14,19 @@ class BookController extends Controller
     public function get(Request $request) : array
     {
         $id = $request->input('id', 0);
-        if ($id == 0) {
+
+        $sn = $request->input('sn', '');
+        if ($id == 0 and $sn == '') {
             return [];
         }
 
         $book = new BookService();
 
-        return ['data'=>$book->getOne($id)];
+        if($id != 0) {
+            return ['data'=>$book->getOne($id)];
+        }else{
+            return ['data'=>$book->getOneBySn($sn)];
+        }
     }
     /**
      * @param Request $request
