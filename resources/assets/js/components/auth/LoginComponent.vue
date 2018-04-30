@@ -60,6 +60,7 @@
                                     that.$refs.loginForm.resetFields();
                                     that.openSuccess(function () {
                                         sessionStorage.setItem('router',JSON.stringify(response.data.response));
+                                        window.location.href = '/';
                                     });
                                 }else{
                                     console.log(error)
