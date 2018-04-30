@@ -170,7 +170,6 @@ if (type === 'student') {
             hidden: false,
             children: [
                 { path: '/admins', component: Admin, name: '教务账户' ,hidden: false},
-                { path: '/classes/detail/:id', component: ClassDetail, name: '班级详情',hidden:true},
                 { path: '/changePass', component: ChangePass, name: '更換密碼' ,hidden: false},
             ]
         },
@@ -180,7 +179,8 @@ if (type === 'student') {
             name:'班级管理',
             iconCls: 'el-icon-date',
             children:[
-                { path: '/classes', component: Classes, name: '班级管理' ,hidden: false},
+                { path: '/classes', component: Classes, name: '班级列表' ,hidden: false},
+                { path: '/classes/detail/:id', component: ClassDetail, name: '班级详情',hidden:true},
             ]
         },
         {
