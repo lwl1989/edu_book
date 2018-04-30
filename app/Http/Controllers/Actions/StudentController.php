@@ -11,6 +11,18 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
+
+    public function batchPay(Request $request) : array
+    {
+        $classId = $request->post('cid',0);
+        $students = $request->post('students',[]);
+        if($classId === 0 or empty($students)) {
+            return ['code'=>ErrorConstant::PARAMS_ERROR];
+        }
+
+        return ['code'=> StudentService::batchPay($classId, $students) ? 0 : 1];
+    }
+
     public function received(Request $request) : array
     {
         $id = $request->get('uid',0);

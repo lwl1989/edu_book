@@ -54,6 +54,9 @@ Route::group(['prefix'=>'classes','middleware'=>['format']], function (){
     Route::post('create','Actions\ClassesController@create');
     Route::post('update','Actions\ClassesController@update');
     Route::delete('delete','Actions\ClassesController@delete');
+
+
+    Route::get('pay','Actions\ClassesController@payRecord');
     
 });
 
@@ -68,6 +71,8 @@ Route::group(['prefix'=>'student','middleware'=>['format']], function (){
         Route::get('get/received','Actions\StudentController@getBookHasReceived');
     Route::post('receive','Actions\StudentController@doReceive');
     Route::get('received','Actions\StudentController@received');
+
+    Route::post('payed','Actions\StudentController@batchPay');
 
 });
 

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Actions;
 
 
+use App\Exceptions\ErrorConstant;
 use App\Http\Controllers\Controller;
 use App\Library\ArrayParse;
 use App\Services\ClassesService;
@@ -33,6 +34,16 @@ class ClassesController extends Controller
         }
 
         return ['id' => $book->create(), 'create_at' => $time, 'update_at' => $time];
+    }
+
+    public function payRecord(Request $request) : array
+    {
+        $classId = $request->get('cid',0);
+        if($classId == 0) {
+            return ['code'=>ErrorConstant::PARAMS_ERROR];
+        }
+
+        return ['list'=>ClassesService::payLimit(['class_id'=>[$classId]],100,1,false, -1)];
     }
 
     public function update(Request $request)

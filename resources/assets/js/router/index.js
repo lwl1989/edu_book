@@ -93,7 +93,7 @@ let routes = [
 let type = Cookies.getCookie('type');
 type = decodeURIComponent(type);
 
-if(type == null || type == '') {
+if(type == null || type === '') {
     window.location.href = '/login';
 }
 
@@ -107,7 +107,7 @@ let index =  {
             { path: 'home', component: HomeIndex, name: '欢迎' ,hidden: true},
         ]
     };
-if (type == 'student') {
+if (type === 'student') {
     routes = [
         index,
         {
@@ -133,7 +133,7 @@ if (type == 'student') {
             ]
         }
     ];
-}else if(type == 'teacher') {
+}else if(type === 'teacher') {
     routes = [
         index,
         {

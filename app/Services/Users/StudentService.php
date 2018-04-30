@@ -6,6 +6,7 @@ namespace App\Services\Users;
 use App\Models\Book\Book;
 use App\Models\Book\BookOutLog;
 use App\Models\Student\Student;
+use App\Models\Student\StudentPay;
 use App\Models\Student\StudentReceive;
 use App\Services\ServiceBasic;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,30 @@ class StudentService extends ServiceBasic
 {
     protected $model = Student::class;
     protected $listField = ['student.id','student.name','student.student_num','student.created_at','classes.name as class_name'];
+
+    public static function batchPay($classId, array $students) : bool
+    {
+        try {
+            DB::transaction(function () use ($classId, $students) {
+                $time = date("Y-m-d H:i:s");
+                $year = date('Y');
+                foreach ($students as $studentId) {
+
+                    StudentPay::insert([
+                        'student_id' => $studentId,
+                        'class_id' => $classId,
+                        'payment' =>  1,
+                        'payed'  =>  1,
+                        'pay_time' =>  $time,
+                        'year'  =>  $year
+                    ]);
+                }
+            }, 1);
+            return true;
+        }catch (\Exception $exception) {
+            return false;
+        }
+    }
 
     public static function limit(array $conditions, int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
     {

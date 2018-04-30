@@ -32,7 +32,7 @@
                 <el-table-column  label="操作">
                     <template slot-scope="scope">
                         <el-button size="small"
-                                   type="warning" @click="deleteBookReceive(scope.row, scope.$index)">
+                                   type="warning" @click="deleteBookReceive(scope.$index)">
                             删除
                         </el-button>
                     </template>
@@ -40,17 +40,7 @@
             </el-table>
 
             <div style="text-align: center;">
-                <el-row>
-                    <el-col :span="4">
-                        &nbsp;
-                    </el-col>
-                    <el-col :span="8">
-                        <el-button type="primary" @click="doSendBook" size="small">確 定</el-button>
-                    </el-col>
-                    <el-col :span="4">
-                        &nbsp;
-                    </el-col>
-                </el-row>
+                <el-button type="primary" @click="doSendBook" size="small">確 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -93,14 +83,16 @@
                 this.editId = editId;
                 if(editId > 0) {
                     this.getStudentReceived();
+                }else {
+                    this.showReceive = true;
                 }
-                this.showReceive = true;
             },
             getStudentReceived(){
                 let that = this;
                 axios.get('/student/received?uid='+this.editId) .then(function (response) {
                     that.books_received = response.data.response.list;
                     that.loading = true;
+                    that.showReceive = true;
                 }).catch(function (error) {
 
                 });
@@ -161,8 +153,8 @@
 
                 this.resetReceive();
             },
-            deleteBookReceive(){
-
+            deleteBookReceive(index){
+                this.books.splice(index,1);
             },
             resetReceive(){
                 this.loading = false;
