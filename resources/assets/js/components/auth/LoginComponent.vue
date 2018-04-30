@@ -8,9 +8,9 @@
             <el-form-item prop="checkPass">
                 <el-input type="password" auto-complete="off" placeholder="密码" v-model="loginForm.password"></el-input>
             </el-form-item>
-            <el-radio v-model="loginForm.type" label="student">学生</el-radio>
-            <el-radio v-model="loginForm.type" label="teacher">教师</el-radio>
-            <el-radio v-model="loginForm.type" label="admin">老师</el-radio>
+            <!--<el-radio v-model="loginForm.type" label="student">学生</el-radio>-->
+            <!--<el-radio v-model="loginForm.type" label="teacher">教师</el-radio>-->
+            <el-radio v-model="loginForm.type" label="admin">管理员</el-radio>
             <el-form-item style="width:100%;">
                 <el-button type="primary" style="width:100%;" @click="login">登录</el-button>
             </el-form-item>
