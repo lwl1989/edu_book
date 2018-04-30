@@ -206,7 +206,7 @@ if (type === 'student') {
             hidden: false,
             children: [
                 { path: '/student/index', component: Student, name: '学生用户' },
-                { path: '/student/receive', component: StudentReceive, name: '学生领书记录' },
+              //  { path: '/student/receive', component: StudentReceive, name: '学生领书记录' },
                 { path: '/student/detail/:id', component: StudentDetail, name: '学生详情' ,hidden:true},
             ]
         },{
