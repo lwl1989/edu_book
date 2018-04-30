@@ -55,7 +55,7 @@ class PlanController extends Controller
     public function create(Request $request) : array
     {
         try {
-            $params = ArrayParse::checkParamsArray(['classes', 'note_book_num', 'book_id', 'number',
+            $params = ArrayParse::checkParamsArray(['classes', 'notebook_num', 'book_id', 'number',
                 'plan_year', 'up_down'],
                 $request->input());
         } catch (\Exception $exception) {
@@ -79,7 +79,7 @@ class PlanController extends Controller
             return [];
         }
 
-        $params = ArrayParse::arrayCopy(['classes', 'note_book_num', 'book_id', 'number',
+        $params = ArrayParse::arrayCopy(['classes', 'notebook_num', 'book_id', 'number',
             'plan_year', 'up_down'], $request->input());
         if (empty($params)) {
             return [];

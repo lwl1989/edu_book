@@ -1,24 +1,81 @@
 <template>
     <div id="app">
         <el-dialog  :visible.sync="showReceive">
-            receives
+            <el-button type="text" icon="el-icon-success">已领书籍</el-button>
+            <el-table :data="books_received" stripe style="width: 100%" v-if="loading" :row-class-name="tableRowClassName" >
+                <el-table-column prop="sn" label="书籍sn" >
+                </el-table-column>
+                <el-table-column prop="name" label="书籍名称" >
+                </el-table-column>
+                <el-table-column prop="notebook_num" label="笔记本数量" >
+                </el-table-column>
+                <el-table-column prop="cost" label="标注价格" >
+                </el-table-column>
+                <el-table-column prop="received_time" label="领取时间" >
+                </el-table-column>
+            </el-table>
+
+            <el-row>
+                &nbsp;
+            </el-row>
+
+            <el-button type="text" icon="el-icon-location">现在领取</el-button>
+            <el-table :data="books" stripe style="width: 100%">
+                <el-table-column prop="sn" label="书籍sn">
+                </el-table-column>
+                <el-table-column prop="name" label="书籍名称">
+                </el-table-column>
+                <el-table-column prop="notebook_num" label="笔记本数量" >
+                </el-table-column>
+                <el-table-column prop="cost" label="标注价格">
+                </el-table-column>
+                <el-table-column  label="操作">
+                    <template slot-scope="scope">
+                        <el-button size="small"
+                                   type="warning" @click="deleteBookReceive(scope.row, scope.$index)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <div style="text-align: center;">
+                <el-row>
+                    <el-col :span="4">
+                        &nbsp;
+                    </el-col>
+                    <el-col :span="8">
+                        <el-button type="primary" @click="doSendBook" size="small">確 定</el-button>
+                    </el-col>
+                    <el-col :span="4">
+                        &nbsp;
+                    </el-col>
+                </el-row>
+            </div>
         </el-dialog>
     </div>
 </template>
 
+<style>
+    .el-table .success_table_bg{
+        background: #f0f9eb;
+    }
+</style>
+
 <script>
+    import NewDialog from '../../tools/element-ui-dialog';
     export default {
         name: "student-receive",
-
         data:function () {
             return {
-                receives:[],
-                rules:{},
                 showReceive:false,
+                loading:false,
                 editId:0,
                 code:"",
                 start:new Date(),
-                books:[]
+                books:[],
+                books_received:[],
+                dialog:NewDialog(this)
             }
         },
         watch:{
@@ -26,6 +83,7 @@
                 if(current === true) {
                     document.body.onkeydown = this.keyDown
                 }else{
+                    this.resetReceive();
                     document.body.onkeydown = null
                 }
             }
@@ -34,11 +92,19 @@
             studentReceiveShow(editId){
                 this.editId = editId;
                 if(editId > 0) {
-                    //get
+                    this.getStudentReceived();
                 }
                 this.showReceive = true;
             },
+            getStudentReceived(){
+                let that = this;
+                axios.get('/student/received?uid='+this.editId) .then(function (response) {
+                    that.books_received = response.data.response.list;
+                    that.loading = true;
+                }).catch(function (error) {
 
+                });
+            },
             keyDown(e) {
                 let now = new Date();
                 let tCode = parseInt(e.keyCode);
@@ -51,40 +117,87 @@
                         this.code += String.fromCharCode(e.keyCode);
                     }
                 }
-
                 if((tCode === 40 || tCode === 13) && this.code != "") {
                     this.getBookFromSn(this.code);
                     this.code = "";
                 }
             },
             getBookFromSn(sn){
-                axios.get('/book/get?sn='+sn) .then(function (response) {
-                    this.books.push(response.data.response.data);
+                let that = this;
+                axios.get('/student/get/received?sn='+sn+'&uid='+this.editId) .then(function (response) {
+                    //console.log(that.dialog);
+                    if(response.data.code !== 0) {
+                        if(response.data.code === 500302) {
+                            that.dialog.openWarning(function () {
+                            }, '此书籍已经被领取');
+                        }else {
+                            that.dialog.openWarning(function () {
+                            }, '没有获取到本书数据，请重试或查询书籍是否存在');
+                        }
+                    }else{
+                        if(response.data.response.data.length === 0) {
+                            that.dialog.openWarning(function () {},'没有获取到本书数据，请重试或查询书籍是否存在');
+                        }else{
+                            let book = response.data.response.data;
+                            let exists = false;
+                            that.books.forEach(function(item){
+                               if(item.id === book.id) {
+                                   that.dialog.openWarning(function () {},'书籍已存在');
+                                   exists = true;
+                               }
+                            });
+                            if(!exists) {
+                                that.books.push(response.data.response.data);
+                            }
+                        }
+                    }
                 }).catch(function (error) {
-
+                    that.dialog.openWarning(function () {
+                    }, '没有获取到本书数据，请重试或查询书籍是否存在');
                 });
             },
             studentReceiveHide(){
                 this.showReceive = false;
+
                 this.resetReceive();
             },
+            deleteBookReceive(){
+
+            },
             resetReceive(){
-                this.student = {
-                    id:0,
-                    book_id:"",
-                    number:0,
-                    note_book_num:0,
-                    classes:[
-                        1
-                    ],
-                    plan_year:0,
-                    up_down:"0"
-                };
+                this.loading = false;
+                this.books_received = [];
+                this.editId = 0;
+                this.books = [];
+            },
+            doSendBook(){
+                let that = this;
+                if(that.books.length === 0) {
+                    that.dialog.openWarning(function () {},'请扫描书籍');
+                    return;
+                }
+                if(that.editId === 0) {
+                    that.dialog.openWarning(function () {},'学生ID错误');
+                    return;
+                }
+                this.dialog.openRefresh("是否执行书本出库",function () {
+                    axios.post('/student/receive',{id:that.editId,books:that.books})
+                        .then(function (response) {
+                            if(response.data.code == 0) {
+                               that.dialog.openSuccess(function () {
+                                   that.studentReceiveHide();
+                               },'操作成功');
+                            }else{
+                                that.dialog.openDialog("warning",callback);
+                            }
+                        }).catch(function (error) {
+                        that.dialog.openDialog("warning",callback);
+                    });
+                });
+            },
+            tableRowClassName({row, rowIndex}) {
+                return 'success_table_bg';
             }
         }
     }
 </script>
-
-<style scoped>
-
-</style>

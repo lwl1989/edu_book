@@ -21,10 +21,10 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="name" label="学生名称(点击查看领书记录)" >
+                    <el-table-column prop="name" label="学生名称(点击查看缴费记录)" >
                         <template slot-scope="scope">
                             <el-button  size="small"
-                                        type="text" @click="listReceived(scope.row, scope.$index)">
+                                        type="text" @click="listPay(scope.row)">
                                 {{scope.row.name}}
                             </el-button>
                         </template>
@@ -62,17 +62,17 @@
 
         <student-detail ref="detail" v-on:add="addStudentList" v-on:edit="editStudentList"></student-detail>
         <student-receive ref="receive"></student-receive>
-        <student-received ref="received"></student-received>
+        <student-pay ref="pay"></student-pay>
     </div>
 </template>
 
 <script>
     import StudentDetail from "./StudentDetailComponent";
     import StudentReceive from "./StudentReceiveComponent";
-    import StudentReceived from "./StudentReceivedComponent";
+    import StudentPay from "./StudentPayComponent";
     export default {
         name: "StudentComponent",
-        components: {StudentReceive, StudentDetail,StudentReceived},
+        components: {StudentReceive, StudentDetail,StudentPay},
         data: function () {
             return {
                 currentPage: 1,
@@ -119,8 +119,8 @@
             listReceive(item){
                 this.$refs.receive.studentReceiveShow(item.id)
             },
-            listReceived(item){
-                this.$refs.received.studentReceiveShow(item.id)
+            listPay(item){
+                this.$refs.pay.studentReceiveShow(item.id)
             },
             deleteStudent(item, index) {
                 let that = this;
@@ -150,7 +150,7 @@
             editStudentList(item){
                 let index = -1;
                 this.student.forEach(function (value, key) {
-                    if(value.id == item.id) {
+                    if(value.id === item.id) {
                         index = key;
                     }
                 });

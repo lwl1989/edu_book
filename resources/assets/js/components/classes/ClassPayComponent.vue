@@ -1,29 +1,30 @@
 <template>
     <div id="app">
-        <el-dialog  :visible.sync="showReceive">
+        <el-dialog  :visible.sync="showPay">
             received
         </el-dialog>
     </div>
 </template>
 
 <script>
+    import NewDialog from '../../tools/element-ui-dialog';
     export default {
-        name: "student-received",
+        name: "classes-pay",
 
         data:function () {
             return {
-                showReceive:false,
+                showPay:false,
                 editId:0,
-                books:[]
+                pay:[]
             }
         },
         methods:{
-            studentReceiveShow(editId){
+            ClassPay(editId){
                 this.editId = editId;
                 if(editId > 0) {
                     //get
                 }
-                this.showReceive = true;
+                this.showPay = true;
             },
 
         }

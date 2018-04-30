@@ -27,9 +27,9 @@
                 </el-col>
             </el-form-item>
 
-            <el-form-item label="笔记本数量" prop="note_book_num">
+            <el-form-item label="笔记本数量" prop="notebook_num">
                 <el-col :span="12">
-                    <el-input v-model="plan.note_book_num" ></el-input>
+                    <el-input v-model="plan.notebook_num" ></el-input>
                 </el-col>
             </el-form-item>
 
@@ -95,7 +95,7 @@
                     id:0,
                     book_id:"",
                     number:0,
-                    note_book_num:0,
+                    notebook_num:0,
                     classes:[
                         1
                     ],

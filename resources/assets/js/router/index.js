@@ -114,7 +114,7 @@ if (type == 'student') {
             path: '/',
             component: Home,
             name: '账户管理',
-            iconCls: 'el-icon-d-caret',
+            iconCls: 'el-icon-menu',
             hidden: false,
             children: [
                 { path: '/changePass', component: ChangePass, name: '更換密碼'},
@@ -140,7 +140,7 @@ if (type == 'student') {
             path: '/',
             component: Home,
             name: '账户管理',
-            iconCls: 'el-icon-d-caret',
+            iconCls: 'el-icon-menu',
             hidden: false,
             children: [
                 { path: '/changePass', component: ChangePass, name: '更換密碼'},
@@ -150,12 +150,12 @@ if (type == 'student') {
             path: '/',
             component: Home,
             name: '功能',
-            iconCls: 'el-icon-d-caret',
+            iconCls: 'el-icon-document',
             hidden: false,
             children: [
                 { path: '/classes/list', component:Classes, name: '班级列表'},
-                { path: '/book/list', component:Book, name: '书籍列表'},
-                { path: '/teacher/receive', component: StudentReceive, name: '我的领书记录' }
+                { path: '/book/list', component: Book, name: '书籍列表'},
+                { path: '/teacher/receive', component: TeacherReceive, name: '我的领书记录' }
             ]
         }
     ];
@@ -166,20 +166,28 @@ if (type == 'student') {
             path: '/',
             component: Home,
             name: '账户管理',
-            iconCls: 'el-icon-d-caret',
+            iconCls: 'el-icon-menu',
             hidden: false,
             children: [
                 { path: '/admins', component: Admin, name: '教务账户' ,hidden: false},
-                { path: '/classes', component: Classes, name: '班级管理' ,hidden: false},
                 { path: '/classes/detail/:id', component: ClassDetail, name: '班级详情',hidden:true},
                 { path: '/changePass', component: ChangePass, name: '更換密碼' ,hidden: false},
+            ]
+        },
+        {
+            path:'/',
+            component:Home,
+            name:'班级管理',
+            iconCls: 'el-icon-date',
+            children:[
+                { path: '/classes', component: Classes, name: '班级管理' ,hidden: false},
             ]
         },
         {
             path: '/',
             component: Home,
             name: '书本管理',
-            iconCls: 'el-icon-d-caret',
+            iconCls: 'el-icon-document',
             hidden: false,
             children: [
                 { path: '/book', component: Book, name: '书籍管理'},
@@ -205,7 +213,7 @@ if (type == 'student') {
             path: '/',
             component: Home,
             name: '教师用户管理',
-            iconCls: 'el-icon-d-caret',
+            iconCls: 'el-icon-service',
             hidden: false,
             children: [
                 { path: '/teacher/index', component: Teacher, name: '教师用户' },

@@ -18,7 +18,13 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="name" label="书籍名称" >
+                    <el-table-column prop="name" label="班级名称(点击查看班级缴费情况)" >
+                        <template slot-scope="scope">
+                            <el-button  size="small"
+                                        type="text" @click="openClassPay(scope.row)">
+                                {{scope.row.name}}
+                            </el-button>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="student_count" label="现有人数" >
                     </el-table-column>
@@ -48,10 +54,13 @@
                 </div>
             </el-col>
         </el-row>
+
+        <class-pay ref="pay"></class-pay>
     </div>
 </template>
 
 <script>
+    import ClassPay from './ClassPayComponent'
     export default {
         name: "Classes",
         data: function () {
@@ -63,6 +72,7 @@
                 classes: []
             }
         },
+        components:{ClassPay},
         mounted: function () {
             this.$nextTick(function() {
                 this.getClassesMaxPage();
@@ -71,6 +81,9 @@
             })
         },
         methods: {
+            openClassPay(item){
+                this.$refs.pay.ClassPay(item.id);
+            },
             getClassesMaxPage() {
                 let that = this;
                 axios.get('/classes/count')

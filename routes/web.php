@@ -65,6 +65,9 @@ Route::group(['prefix'=>'student','middleware'=>['format']], function (){
         Route::post('create','Actions\StudentController@create');
         Route::post('update','Actions\StudentController@update');
         Route::delete('delete','Actions\StudentController@delete');
+        Route::get('get/received','Actions\StudentController@getBookHasReceived');
+    Route::post('receive','Actions\StudentController@doReceive');
+    Route::get('received','Actions\StudentController@received');
 
 });
 

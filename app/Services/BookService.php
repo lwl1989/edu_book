@@ -261,10 +261,11 @@ class BookService extends ServiceBasic
         return '全学年';
     }
 
-    public function getOneBySn($sn) : array
+    public function getOneBySn(string $sn) : array
     {
         $model = self::getModelInstance();
         $data = $model->newQuery()->where('sn','=', $sn)->limit(1)->get();
-        return empty($data) ? [] : $data->toArray();
+        $data = empty($data) ? [] : $data->toArray();
+        return empty($data) ? [] : $data[0];
     }
 }
