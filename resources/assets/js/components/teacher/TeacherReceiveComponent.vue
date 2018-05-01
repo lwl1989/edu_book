@@ -180,10 +180,14 @@
                                    that.teacherReceiveHide();
                                },'操作成功');
                             }else{
-                                that.dialog.openDialog("warning",callback);
+                                that.dialog.openDialog("warning",function () {
+                                    that.teacherReceiveHide();
+                                });
                             }
                         }).catch(function (error) {
-                        that.dialog.openDialog("warning",callback);
+                        that.dialog.openDialog("warning",function () {
+                            that.teacherReceiveHide();
+                        });
                     });
                 });
             },

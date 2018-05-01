@@ -85,6 +85,7 @@ class TeacherService extends ServiceBasic
                         'received_time' =>  $time,
                         'plan_id'   =>  $book['plan_id']
                     ]);
+                    Book::outStock($book['id'],1);
                 }
             }, 1);
             return true;
