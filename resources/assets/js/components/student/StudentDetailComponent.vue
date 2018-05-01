@@ -134,7 +134,7 @@
                                     instance.confirmButtonLoading = true;
                                     instance.confirmButtonText = '提交中...';
 
-                                    let url = that.editId === 0 ? '/student/create' : '/student/update';
+                                    let url = that.editId === 0 ? '/student/create' : '/student/update?id='+that.editId;
 
                                     axios.post(url,that.student)
                                         .then(function (response) {

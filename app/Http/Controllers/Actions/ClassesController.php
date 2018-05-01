@@ -48,8 +48,8 @@ class ClassesController extends Controller
 
     public function update(Request $request)
     {
-        if($params = $this->_check($request, ['name', 'excepted_count','student_count'])){
-            return ['code'=>1];
+        if(!($params = $this->_check($request, ['name', 'excepted_count','student_count']))){
+            return ['code'=>ErrorConstant::PARAMS_ERROR];
         }
 
         $id = $params[0];
