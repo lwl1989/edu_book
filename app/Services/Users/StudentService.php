@@ -4,7 +4,6 @@ namespace App\Services\Users;
 
 
 use App\Models\Book\Book;
-use App\Models\Book\BookOutLog;
 use App\Models\Student\Student;
 use App\Models\Student\StudentPay;
 use App\Models\Student\StudentReceive;
@@ -114,12 +113,6 @@ class StudentService extends ServiceBasic
             DB::transaction(function () use ($id, $books) {
                 $time = date("Y-m-d H:i:s");
                 foreach ($books as $book) {
-//                    $receive = new StudentReceive();
-//                    $receive->student_id = $id;
-//                    $receive->book_id = $book['id'];
-//                    $receive->notebook_num = $book['notebook_num'];
-//                    $receive->received = 1;
-//                    $receive->received_time = $time;
                     StudentReceive::insert([
                         'student_id' => $id,
                         'book_id' => $book['id'],
@@ -128,6 +121,7 @@ class StudentService extends ServiceBasic
                         'received_time' =>  $time,
                         'plan_id'   =>  $book['plan_id']
                     ]);
+                    Book::outStock($book['id'],1);
                 }
             }, 1);
             return true;

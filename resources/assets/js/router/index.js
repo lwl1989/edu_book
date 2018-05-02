@@ -13,14 +13,11 @@ import BookOrder from '../components/book/BookOrderComponent'
 import BookOrderDetail from '../components/book/BookOrderDetailComponent'
 import BookPlan from '../components/book/BookPlanComponent'
 import BookPlanDetail from '../components/book/BookPlanDetailComponent'
+import BookReceived from '../components/book/BookReceivedComponent'
 
 import Teacher from '../components/teacher/TeacherComponent'
-import TeacherReceive from '../components/teacher/TeacherReceiveComponent'
-import TeacherDetail from '../components/teacher/TeacherDetailComponent'
 
 import Student from '../components/student/StudentComponent'
-import StudentReceive from '../components/student/StudentReceiveComponent'
-import StudentDetail from '../components/student/StudentDetailComponent'
 
 import Classes from '../components/classes/ClassesComponent'
 import ClassDetail from  '../components/classes/ClassesDetailComponent'
@@ -73,8 +70,7 @@ let routes = [
         hidden: true,
         children: [
             { path: 'student/index', component: Student, name: '学生用户' },
-            { path: 'student/receive', component: StudentReceive, name: '学生领书记录' },
-            { path: 'student/detail/:id', component: StudentDetail, name: '学生详情' ,hidden:true},
+            { path: 'book/received', component: BookReceived, name: '教师领书记录',props:{ receiver:'student' } },
         ]
     },{
         path: '/',
@@ -84,8 +80,7 @@ let routes = [
         hidden: true,
         children: [
             { path: 'teacher/index', component: Teacher, name: '教师用户' },
-            { path: 'teacher/receive', component: TeacherReceive, name: '教师领书记录' },
-            { path: 'teacher/detail/:id', component: TeacherDetail, name: '教师详情' ,hidden:true},
+            { path: 'book/received', component: BookReceived, name: '教师领书记录',props:{ receiver:'teacher' } },
         ]
     },
 ];
@@ -129,7 +124,6 @@ if (type === 'student') {
             children: [
                 { path: '/classes/list', component:Classes, name: '班级列表'},
                 { path: '/book/list', component:Book, name: '书籍列表'},
-                { path: '/student/receive', component: StudentReceive, name: '我的领书记录' }
             ]
         }
     ];
@@ -155,7 +149,6 @@ if (type === 'student') {
             children: [
                 { path: '/classes/list', component:Classes, name: '班级列表'},
                 { path: '/book/list', component: Book, name: '书籍列表'},
-                { path: '/teacher/receive', component: TeacherReceive, name: '我的领书记录' }
             ]
         }
     ];
@@ -206,8 +199,12 @@ if (type === 'student') {
             hidden: false,
             children: [
                 { path: '/student/index', component: Student, name: '学生用户' },
+<<<<<<< HEAD
               //  { path: '/student/receive', component: StudentReceive, name: '学生领书记录' },
                 { path: '/student/detail/:id', component: StudentDetail, name: '学生详情' ,hidden:true},
+=======
+                { path: '/student/receive', component: BookReceived, name: '学生领书记录' },
+>>>>>>> e6dc91aa2c88146c0859437cb2f68f60129ce0be
             ]
         },{
             path: '/',
@@ -217,8 +214,7 @@ if (type === 'student') {
             hidden: false,
             children: [
                 { path: '/teacher/index', component: Teacher, name: '教师用户' },
-                { path: '/teacher/receive', component: TeacherReceive, name: '教师领书记录' },
-                { path: '/teacher/detail/:id', component: TeacherDetail, name: '教师详情' ,hidden:true},
+                { path: '/teacher/receive', component: BookReceived, name: '教师领书记录' },
             ]
         },
     ];
