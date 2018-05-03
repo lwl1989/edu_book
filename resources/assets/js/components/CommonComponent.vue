@@ -4,14 +4,14 @@
             <el-col :span="24">
                 <div class="home-header">
                     <div class="home-span" @click="goToIndex">
-                        <span>VueAdmin</span>
+                        <span>湖南工贸技师学院教材管理系统</span>
                     </div>
                     <div class="home-icon">
                         <!-- <i class="el-icon-setting"></i> -->
                         <el-dropdown split-button type="primary" @click="dialogTableVisible = true" @command="handleCommand">
-                            查看个人信息
+                            欢迎使用教材管理系统
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="login">退出登录</el-dropdown-item>
+                                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
                                 <el-dropdown-item command="password">修改密码</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -148,10 +148,10 @@ export default {
         * 页面跳转方法
         */
         handleCommand(command) {
-            if (command == 'login') {
-                this.$router.push({ path: '/login' })
+            if (command === 'logout') {
+                window.location.href = '/logout';
             } else {
-                this.$router.push({ path: '/system/update/password' })
+                this.$router.push({ path: '/changePass' })
             }
         }
     }

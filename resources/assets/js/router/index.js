@@ -199,12 +199,7 @@ if (type === 'student') {
             hidden: false,
             children: [
                 { path: '/student/index', component: Student, name: '学生用户' },
-<<<<<<< HEAD
-              //  { path: '/student/receive', component: StudentReceive, name: '学生领书记录' },
-                { path: '/student/detail/:id', component: StudentDetail, name: '学生详情' ,hidden:true},
-=======
                 { path: '/student/receive', component: BookReceived, name: '学生领书记录' },
->>>>>>> e6dc91aa2c88146c0859437cb2f68f60129ce0be
             ]
         },{
             path: '/',

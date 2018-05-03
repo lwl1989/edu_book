@@ -26,7 +26,7 @@
                 loginForm: {
                     account: "",
                     password: "",
-                    type:"student"
+                    type:"admin"
                 },
                 rules: {
                     account: [{ required: true, message: '账户不能为空'}, { min: 6, max: 30, message: '长度需要在 6 到 30 个字符'}], //, trigger: 'blur'
