@@ -45,8 +45,8 @@ const studentRule = {
    // password:[{ required: true}, {  min: 6, max: 30,  message: '长度需要在 6 到 30 个字符'}],
 };
 const bookRule = {
-    name: [{ required: true, message:'书籍名称必须填写'}, { min: 0, max: 50, message: '书籍名称长度不能超过 50 个字符'}],
-    sn:[{ required: true, message: '书籍sn必须填写'},{ min: 0, max: 50, message: 'sn长度不能超过 50 个字符'}],
+    name: [{ required: true, message:'教材名称必须填写'}, { min: 0, max: 50, message: '教材名称长度不能超过 50 个字符'}],
+    sn:[{ required: true, message: '教材sn必须填写'},{ min: 0, max: 50, message: 'sn长度不能超过 50 个字符'}],
     // price:[{require:false,type:'number', message:'必须填写正确的数字',trigger: 'blur'}],
     cost:[{require:true,validator:naturalNumberValidator, message:'必须填写正确的数字'}],
     stock:[{require:true,type:'number', message:'必须填写正确的数字'}],
@@ -58,8 +58,8 @@ const bookOrderRule = {
     price:[{require:true,type:'number', message:'必须填写正确的数字'}],
 };
 const bookPlanRule = {
-    name: [{ required: true, message:'书籍名称必须填写'}, { min: 0, max: 50, message: '书籍名称长度不能超过 50 个字符'}],
-    sn:[{ required: true, message: '书籍sn必须填写'},{ min: 0, max: 50, message: 'sn长度不能超过 50 个字符'}],
+    name: [{ required: true, message:'教材名称必须填写'}, { min: 0, max: 50, message: '教材名称长度不能超过 50 个字符'}],
+    sn:[{ required: true, message: '教材sn必须填写'},{ min: 0, max: 50, message: 'sn长度不能超过 50 个字符'}],
     // price:[{require:false,type:'number', message:'必须填写正确的数字',trigger: 'blur'}],
     cost:[{require:true,validator:naturalNumberValidator, message:'必须填写正确的数字'}],
     stock:[{require:true,type:'number', message:'必须填写正确的数字'}],

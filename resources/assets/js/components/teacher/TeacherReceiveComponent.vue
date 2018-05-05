@@ -1,11 +1,11 @@
 <template>
     <div id="app">
         <el-dialog  :visible.sync="showReceive">
-            <el-button type="text" icon="el-icon-success">已领书籍</el-button>
+            <el-button type="text" icon="el-icon-success">已领教材</el-button>
             <el-table :data="books_received" stripe style="width: 100%" v-if="loading" :row-class-name="tableRowClassName" >
-                <el-table-column prop="sn" label="书籍sn" >
+                <el-table-column prop="sn" label="教材sn" >
                 </el-table-column>
-                <el-table-column prop="name" label="书籍名称" >
+                <el-table-column prop="name" label="教材名称" >
                 </el-table-column>
                 <el-table-column prop="notebook_num" label="笔记本数量" >
                 </el-table-column>
@@ -21,9 +21,9 @@
 
             <el-button type="text" icon="el-icon-location">现在领取</el-button>
             <el-table :data="books" stripe style="width: 100%">
-                <el-table-column prop="sn" label="书籍sn">
+                <el-table-column prop="sn" label="教材sn">
                 </el-table-column>
-                <el-table-column prop="name" label="书籍名称">
+                <el-table-column prop="name" label="教材名称">
                 </el-table-column>
                 <el-table-column prop="notebook_num" label="笔记本数量" >
                 </el-table-column>
@@ -121,20 +121,20 @@
                     if(response.data.code !== 0) {
                         if(response.data.code === 500302) {
                             that.dialog.openWarning(function () {
-                            }, '此书籍已经被领取');
+                            }, '此教材已经被领取');
                         }else {
                             that.dialog.openWarning(function () {
-                            }, '没有获取到本书数据，请重试或查询书籍是否存在');
+                            }, '没有获取到本书数据，请重试或查询教材是否存在');
                         }
                     }else{
                         if(response.data.response.data.length === 0) {
-                            that.dialog.openWarning(function () {},'没有获取到本书数据，请重试或查询书籍是否存在');
+                            that.dialog.openWarning(function () {},'没有获取到本书数据，请重试或查询教材是否存在');
                         }else{
                             let book = response.data.response.data;
                             let exists = false;
                             that.books.forEach(function(item){
                                if(item.id === book.id) {
-                                   that.dialog.openWarning(function () {},'书籍已存在');
+                                   that.dialog.openWarning(function () {},'教材已存在');
                                    exists = true;
                                }
                             });
@@ -145,7 +145,7 @@
                     }
                 }).catch(function (error) {
                     that.dialog.openWarning(function () {
-                    }, '没有获取到本书数据，请重试或查询书籍是否存在');
+                    }, '没有获取到本书数据，请重试或查询教材是否存在');
                 });
             },
             teacherReceiveHide(){
@@ -165,7 +165,7 @@
             doSendBook(){
                 let that = this;
                 if(that.books.length === 0) {
-                    that.dialog.openWarning(function () {},'请扫描书籍');
+                    that.dialog.openWarning(function () {},'请扫描教材');
                     return;
                 }
                 if(that.editId === 0) {

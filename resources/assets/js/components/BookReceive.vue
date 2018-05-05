@@ -1,5 +1,7 @@
 <template>
-    <div id="app"></div>
+    <div id="app">
+        records
+    </div>
 </template>
 
 <script>
@@ -14,7 +16,6 @@
         },
         watch:{
             showReceive(current, old){
-                //document.body.onkeydown = this.keyDown
                 console.log(current,old);
             }
         },

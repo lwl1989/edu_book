@@ -7,7 +7,7 @@
         <!--  商品按鈕列 -->
         <el-row>
             <el-col :span="24" style="margin-top: 20px;">
-                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增书籍</el-button>
+                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增教材</el-button>
             </el-col>
         </el-row>
         <!--  商品Table列 -->
@@ -20,9 +20,9 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="sn" label="书籍sn" width="150" :show-overflow-tooltip=true>
+                    <el-table-column prop="sn" label="教材sn" width="150" :show-overflow-tooltip=true>
                     </el-table-column>
-                    <el-table-column prop="name" label="书籍名称" width="150" :show-overflow-tooltip=true>
+                    <el-table-column prop="name" label="教材名称" width="150" :show-overflow-tooltip=true>
                     </el-table-column>
                     <el-table-column prop="company" label="出版社" width="150">
                     </el-table-column>
@@ -36,11 +36,11 @@
                         <template slot-scope="scope">
                             <el-button  size="small"
                                        type="edit" @click="editBook(scope.row, scope.$index)">
-                                编辑书籍
+                                编辑教材
                             </el-button>
                             <el-button size="small"
                                        type="warning" @click="deleteBook(scope.row, scope.$index)">
-                                删除书籍
+                                删除教材
                             </el-button>
                         </template>
                     </el-table-column>

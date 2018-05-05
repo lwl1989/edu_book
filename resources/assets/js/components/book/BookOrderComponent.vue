@@ -7,7 +7,7 @@
         <!--  商品按鈕列 -->
         <el-row>
             <el-col :span="24" style="margin-top: 20px;">
-                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增订单</el-button>
+                <el-button type="primary" icon="el-icon-goods" @click="addBook">新增入库</el-button>
             </el-col>
         </el-row>
         <!--  商品Table列 -->
@@ -20,9 +20,9 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="order_num" label="订单号" width="120">
+                    <el-table-column prop="order_num" label="入库号" width="120">
                     </el-table-column>
-                    <el-table-column prop="name" label="书籍名称" :show-overflow-tooltip=true width="100">
+                    <el-table-column prop="name" label="教材名称" :show-overflow-tooltip=true width="100">
                     </el-table-column>
                     <el-table-column prop="number" label="计划数量" width="100">
                     </el-table-column>
@@ -36,11 +36,11 @@
                         <template slot-scope="scope">
                             <el-button v-if="scope.row.status == 1" size="small"
                                        type="success" @click="eventStateUpdate(scope.row, scope.$index)">
-                                完成订单
+                                完成入库
                             </el-button>
                             <el-button v-if="scope.row.status == 1" size="small"
                                        type="warning" @click="eventStateUpdate(scope.row, scope.$index)">
-                                删除订单
+                                删除入库
                             </el-button>
                             <el-button v-if="scope.row.state == 2" size="small"
                                        type="danger" @click="eventStateUpdate(scope.row, scope.$index)">

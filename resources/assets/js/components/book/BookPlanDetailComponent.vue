@@ -2,7 +2,7 @@
     <div id="app">
         <el-form :model="plan" :rules="rules" ref="plan" label-width="150px" size="small">
 
-            <el-form-item label="书籍名称" prop="book_id">
+            <el-form-item label="教材名称" prop="book_id">
                 <el-select
                         v-model="plan.book_id"
                         filterable
@@ -102,7 +102,7 @@
                     plan_year:0,
                     up_down:"0"
                 },
-                search_book:"请输入书籍名(模糊搜索)",
+                search_book:"请输入教材名(模糊搜索)",
                 rules: BookPlanRule,
                 again:0,
                 loading: false,

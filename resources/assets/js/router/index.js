@@ -57,9 +57,9 @@ let routes = [
         iconCls: 'el-icon-d-caret',
         hidden: true,
         children: [
-            { path: 'book', component: Book, name: '书籍管理'},
-            { path: 'book/order', component: BookOrder, name: '书籍订单'},
-            { path: 'book/detail/:id', component: BookDetail, name: '书籍详情',hidden:true}
+            { path: 'book', component: Book, name: '教材管理'},
+            { path: 'book/order', component: BookOrder, name: '教材入库'},
+            { path: 'book/detail/:id', component: BookDetail, name: '教材详情',hidden:true}
         ]
     },
     {
@@ -99,7 +99,7 @@ let index =  {
         name:'导航',
         hidden: true,
         children:[
-            { path: 'home', component: HomeIndex, name: '欢迎' ,hidden: true},
+            { path: 'home', component: HomeIndex, name: '说明' ,hidden: true},
         ]
     };
 if (type === 'student') {
@@ -123,7 +123,7 @@ if (type === 'student') {
             hidden: false,
             children: [
                 { path: '/classes/list', component:Classes, name: '班级列表'},
-                { path: '/book/list', component:Book, name: '书籍列表'},
+                { path: '/book/list', component:Book, name: '教材列表'},
             ]
         }
     ];
@@ -148,7 +148,7 @@ if (type === 'student') {
             hidden: false,
             children: [
                 { path: '/classes/list', component:Classes, name: '班级列表'},
-                { path: '/book/list', component: Book, name: '书籍列表'},
+                { path: '/book/list', component: Book, name: '教材列表'},
             ]
         }
     ];
@@ -162,7 +162,6 @@ if (type === 'student') {
             iconCls: 'el-icon-menu',
             hidden: false,
             children: [
-                { path: '/admins', component: Admin, name: '教务账户' ,hidden: false},
                 { path: '/changePass', component: ChangePass, name: '更換密碼' ,hidden: false},
             ]
         },
@@ -183,10 +182,10 @@ if (type === 'student') {
             iconCls: 'el-icon-document',
             hidden: false,
             children: [
-                { path: '/book', component: Book, name: '书籍管理'},
-                { path: '/book/order', component: BookOrder, name: '书籍订单'},
-                { path: '/book/detail/:id', component: BookDetail, name: '书籍详情',hidden:true},
-                { path: '/book/order/detail/:id', component: BookOrderDetail, name: '订单详情',hidden:true},
+                { path: '/book', component: Book, name: '教材管理'},
+                { path: '/book/order', component: BookOrder, name: '教材入库'},
+                { path: '/book/detail/:id', component: BookDetail, name: '教材详情',hidden:true},
+                { path: '/book/order/detail/:id', component: BookOrderDetail, name: '入库详情',hidden:true},
                 { path: '/book/plan', component: BookPlan, name: '学年计划'},
                 { path: '/book/plan/detail/:id', component: BookPlanDetail, name: '计划详情',hidden:true}
             ]

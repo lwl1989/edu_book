@@ -4,13 +4,13 @@
 
             <el-row>
                 <el-col :span="12">
-                    <el-form-item label="书籍名称" prop="book_id">
+                    <el-form-item label="教材名称" prop="book_id">
                         <el-select
                                 v-model="order.plan_id"
                                 filterable
                                 remote
                                 reserve-keyword
-                                placeholder="请输入书籍名称关键词"
+                                placeholder="请输入教材名称关键词"
                                 :remote-method="getBookPlan"
                                 :loading="loading"
                                 @change="changeBook"
@@ -36,12 +36,12 @@
                 </el-col>
             </el-form-item>
 
-            <el-form-item label="店家订单编号" prop="order_num">
+            <el-form-item label="店家入库编号" prop="order_num">
                 <el-col :span="12">
                     <el-input v-model="order.order_num" ></el-input>
                 </el-col>
                 <el-col :span="12">
-                    <span>真实订单成立后输入</span>
+                    <span>真实入库成立后输入</span>
                 </el-col>
             </el-form-item>
 

@@ -2,13 +2,13 @@
     <div id="app">
         <el-form :model="book" :rules="rules" ref="book" label-width="150px" size="small">
 
-            <el-form-item label="书籍编号" prop="sn">
+            <el-form-item label="教材编号" prop="sn">
                 <el-col :span="12">
                     <el-input v-model="book.sn" ></el-input>
                 </el-col>
             </el-form-item>
 
-            <el-form-item label="书籍名字" prop="name">
+            <el-form-item label="教材名字" prop="name">
                 <el-col :span="16">
                     <el-input v-model="book.name" ></el-input>
                 </el-col>
