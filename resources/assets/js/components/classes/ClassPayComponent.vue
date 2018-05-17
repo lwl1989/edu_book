@@ -2,7 +2,7 @@
     <div id="app">
 
         <el-dialog  :visible.sync="showPay">
-            <el-button type="text" icon="el-icon-location">缴费列表（已交的默认勾选）</el-button>
+            <el-button type="text" icon="el-icon-location">領取列表（已領書的默认勾选）</el-button>
             <el-checkbox-group v-model="nowPay">
                     <el-checkbox v-for="c in noPay" :label="c.id" :key="c.id" :value="c.id" >
                     {{c.name}}
@@ -12,7 +12,7 @@
                     </el-checkbox>
             </el-checkbox-group>
 
-            <el-button type="primary" @click="doSendPay" size="small">确认缴费</el-button>
+            <el-button type="primary" @click="doSendPay" size="small">确认</el-button>
         </el-dialog>
     </div>
 </template>
@@ -47,7 +47,7 @@
             },
             loadPay(){
                 let that = this;
-                axios.get('/classes/pay?cid='+this.editId) .then(function (response) {
+                axios.get('/classes/receive?cid='+this.editId) .then(function (response) {
                     let pay = response.data.response.list;
                     pay.forEach(function (item) {
                        if(item.payed != null) {
@@ -77,7 +77,7 @@
             doSendPay(){
                 let that = this;
                 this.dialog.openRefresh("请仔细确认是否缴费完成",function () {
-                    axios.post('/student/payed',{cid:that.editId,students:that.nowPay})
+                    axios.post('/student/received',{cid:that.editId,students:that.nowPay})
                         .then(function (response) {
                             if(response.data.code == 0) {
                                 that.dialog.openSuccess(function () {

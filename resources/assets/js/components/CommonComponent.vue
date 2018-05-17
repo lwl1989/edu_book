@@ -141,7 +141,7 @@ export default {
 
         },
         goToIndex() {
-            this.$router.push({ path: '/echarts' })
+            this.$router.push({ path: '/' })
         },
         /*
         * 参数 string 跳转的位置
