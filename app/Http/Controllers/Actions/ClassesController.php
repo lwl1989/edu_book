@@ -36,6 +36,17 @@ class ClassesController extends Controller
         return ['id' => $book->create(), 'create_at' => $time, 'update_at' => $time];
     }
 
+    public function receiveRecord(Request $request) : array
+    {
+        $classId = $request->get('cid',0);
+
+        if($classId == 0) {
+            return ['code'=>ErrorConstant::PARAMS_ERROR];
+        }
+
+        return ['list'=>ClassesService::receivedLimit(['class_id'=>[$classId]],false, -1)];
+    }
+
     public function payRecord(Request $request) : array
     {
         $classId = $request->get('cid',0);

@@ -129,7 +129,6 @@ trait ServiceTrait
         if($status != -1) {
             $conditions['status'] = ['=',$status];
         }
-
         $query = $model::query();
         $table = $model->getTable();
         foreach ($conditions as $field=>$operate) {

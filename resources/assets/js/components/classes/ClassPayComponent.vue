@@ -3,11 +3,11 @@
 
         <el-dialog  :visible.sync="showPay">
             <el-button type="text" icon="el-icon-location">領取列表（已領書的默认勾选）</el-button>
-            <el-checkbox-group v-model="nowPay">
-                    <el-checkbox v-for="c in noPay" :label="c.id" :key="c.id" :value="c.id" >
+            <el-checkbox-group v-model="nowReceiver">
+                    <el-checkbox v-for="c in noReceiver" :label="c.id" :key="c.id" :value="c.id" >
                     {{c.name}}
                     </el-checkbox>
-                    <el-checkbox v-for="c in payed" :label="c.id" :key="c.id" :value="c.id" disabled>
+                    <el-checkbox v-for="c in received" :label="c.id" :key="c.id" :value="c.id" disabled>
                         {{c.name}}
                     </el-checkbox>
             </el-checkbox-group>
@@ -26,9 +26,9 @@
             return {
                 showPay:false,
                 editId:0,
-                payed:[],
-                noPay:[],
-                nowPay:[],
+                received:[],
+                noReceiver:[],
+                nowReceiver:[],
                 dialog:NewDialog(this)
             }
         },
@@ -50,11 +50,11 @@
                 axios.get('/classes/receive?cid='+this.editId) .then(function (response) {
                     let pay = response.data.response.list;
                     pay.forEach(function (item) {
-                       if(item.payed != null) {
-                           that.payed.push(item);
-                           that.nowPay.push(item.id);
+                       if(item.receive === true) {
+                           that.received.push(item);
+                           that.nowReceiver.push(item.id);
                        }else{
-                           that.noPay.push(item);
+                           that.noReceiver.push(item);
                        }
 
                     });
@@ -69,15 +69,15 @@
             },
             resetPay(){
                 this.loading = false;
-                this.payed = [];
+                this.received = [];
                 this.editId = 0;
-                this.noPay = [];
-                this.nowPay = [];
+                this.noReceiver = [];
+                this.nowReceiver = [];
             },
             doSendPay(){
                 let that = this;
                 this.dialog.openRefresh("请仔细确认是否缴费完成",function () {
-                    axios.post('/student/received',{cid:that.editId,students:that.nowPay})
+                    axios.post('receive/batch',{cid:that.editId,students:that.nowReceiver})
                         .then(function (response) {
                             if(response.data.code == 0) {
                                 that.dialog.openSuccess(function () {
