@@ -12,15 +12,17 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
 
-    public function batchPay(Request $request) : array
+    public function doBatchReceive(Request $request) : array
     {
         $classId = $request->post('cid',0);
         $students = $request->post('students',[]);
+        $year = $request->post('year', date('Y'));
+        $upDown = $request->post('up_down', 1);
         if($classId === 0 or empty($students)) {
             return ['code'=>ErrorConstant::PARAMS_ERROR];
         }
 
-        return ['code'=> StudentService::batchPay($classId, $students) ? 0 : 1];
+        return ['code'=> StudentService::batchReceive($classId, $students, $year, $upDown) ? 0 : 1];
     }
 
     public function received(Request $request) : array

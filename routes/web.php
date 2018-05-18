@@ -56,8 +56,8 @@ Route::group(['prefix' => 'classes', 'middleware' => ['format']], function () {
     Route::delete('delete', 'Actions\ClassesController@delete');
 
 
-    Route::get('pay', 'Actions\ClassesController@payRecord');
-
+    Route::get('receive', 'Actions\ClassesController@receiveRecord');
+    //Route::get('received', 'Actions\ClassesController@payRecord');
 });
 
 Route::group(['prefix' => 'student', 'middleware' => ['format']], function () {
@@ -70,8 +70,9 @@ Route::group(['prefix' => 'student', 'middleware' => ['format']], function () {
     Route::delete('delete', 'Actions\StudentController@delete');
     Route::get('get/received', 'Actions\StudentController@getBookHasReceived');
     Route::post('receive', 'Actions\StudentController@doReceive');
-    Route::get('received', 'Actions\StudentController@received');
-    Route::post('payed', 'Actions\StudentController@batchPay');
+    Route::post('receive/batch', 'Actions\StudentController@doBatchReceive');
+    //Route::get('received', 'Actions\StudentController@received');
+    //Route::post('payed', 'Actions\StudentController@batchPay');
 
 });
 

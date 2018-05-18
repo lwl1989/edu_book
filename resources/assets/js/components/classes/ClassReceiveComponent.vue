@@ -76,6 +76,7 @@
             },
             doSendReceive(){
                 let that = this;
+
                 this.dialog.openRefresh("请仔细确认学生名单",function () {
                     axios.post('receive/batch',{cid:that.editId,students:that.nowReceiver})
                         .then(function (response) {

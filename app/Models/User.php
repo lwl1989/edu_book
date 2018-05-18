@@ -20,6 +20,7 @@ class User extends Authenticatable
         if(empty($type)) {
             $type = Cookie::get('type');
         }
+
         $this->_getUserType($type);
 
         parent::__construct($attributes);
@@ -77,7 +78,7 @@ class User extends Authenticatable
                 $this->table = 'admin';
                 break;
             default:
-                $this->table = 'student';
+                $this->table = 'admin';
         }
     }
 

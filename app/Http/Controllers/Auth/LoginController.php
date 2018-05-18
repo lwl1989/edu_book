@@ -45,11 +45,11 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
     /**
-     * Handle a login request to the application.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
      */
     public function login(Request $request)
     {
@@ -66,6 +66,7 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         $this->sendFailedLoginResponse($request);
+        return new JsonResponse();
     }
 
     /**
