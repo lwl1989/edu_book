@@ -4,6 +4,7 @@ namespace App\Services\Users;
 
 
 use App\Models\Book\Book;
+use App\Models\Classes\ClassesReceive;
 use App\Models\Student\Student;
 use App\Models\Student\StudentPay;
 use App\Models\Student\StudentReceive;
@@ -15,24 +16,39 @@ class StudentService extends ServiceBasic
     protected $model = Student::class;
     protected $listField = ['student.id','student.name','student.student_num','student.created_at','classes.name as class_name'];
 
-    public static function batchPay($classId, array $students) : bool
+    public static function batchReceive($classId, array $students, $year, $upDown = 0) : bool
     {
-        try {
-            DB::transaction(function () use ($classId, $students) {
-                $time = date("Y-m-d H:i:s");
-                $year = date('Y');
-                foreach ($students as $studentId) {
 
-                    StudentPay::insert([
-                        'student_id' => $studentId,
-                        'class_id' => $classId,
-                        'payment' =>  1,
-                        'payed'  =>  1,
-                        'pay_time' =>  $time,
-                        'year'  =>  $year
-                    ]);
-                }
-            }, 1);
+        try {
+
+            $exists = ClassesReceive::query()->where('class_id','=',$classId)
+                ->where('year','=', $year)
+             //   ->where('un_down', '=', $upDown)
+                ->first(['id','student_received']);
+
+            if(!empty($exists)) {
+                $exists = $exists->toArray();
+
+                $exists['student_received'] = json_decode($exists['student_received']);
+                $exists['student_received'] = is_array($exists['student_received']) ? $exists['student_received'] : [];
+
+                //$exists['student_received'] = array_merge($exists['student_received']);
+
+                $students = array_map(function ($v){
+                    return intval($v);
+                }, array_unique(array_merge($exists['student_received'], $students)));
+                ClassesReceive::query()->where('id','=',$exists['id'])
+                    ->update(['student_received'=>json_encode($students)]);
+            }else{
+                ClassesReceive::insert([
+                    'student_received'=>json_encode($students),
+                    'class_id' =>$classId,
+                    'year'=>$year,
+                    'un_down'=>$upDown
+                ]);
+            }
+
+
             return true;
         }catch (\Exception $exception) {
             return false;

@@ -77,7 +77,7 @@
             doSendPay(){
                 let that = this;
                 this.dialog.openRefresh("请仔细确认是否缴费完成",function () {
-                    axios.post('receive/batch',{cid:that.editId,students:that.nowReceiver})
+                    axios.post('student/receive/batch',{cid:that.editId,students:that.nowReceiver})
                         .then(function (response) {
                             if(response.data.code == 0) {
                                 that.dialog.openSuccess(function () {
