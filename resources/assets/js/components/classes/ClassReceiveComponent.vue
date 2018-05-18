@@ -1,7 +1,7 @@
 <template>
     <div id="app">
 
-        <el-dialog  :visible.sync="showPay">
+        <el-dialog  :visible.sync="showReceive">
             <el-button type="text" icon="el-icon-location">領取列表（已領書的默认勾选）</el-button>
             <el-checkbox-group v-model="nowReceiver">
                     <el-checkbox v-for="c in noReceiver" :label="c.id" :key="c.id" :value="c.id" >
@@ -12,7 +12,7 @@
                     </el-checkbox>
             </el-checkbox-group>
 
-            <el-button type="primary" @click="doSendPay" size="small">确认</el-button>
+            <el-button type="primary" @click="doSendReceive" size="small">确认</el-button>
         </el-dialog>
     </div>
 </template>
@@ -20,11 +20,11 @@
 <script>
     import NewDialog from '../../tools/element-ui-dialog';
     export default {
-        name: "classes-pay",
+        name: "classes-receive",
 
         data:function () {
             return {
-                showPay:false,
+                showReceive:false,
                 editId:0,
                 received:[],
                 noReceiver:[],
@@ -33,23 +33,23 @@
             }
         },
         watch:{
-            showPay(current, old){
+            showReceive(current, old){
                 if(current === false) {
-                    this.resetPay();
+                    this.resetReceive();
                 }
             }
         },
         methods:{
-            ClassPay(editId){
+            ClassReceive(editId){
                 this.editId = editId;
-                this.loadPay();
-                this.showPay = true;
+                this.loadReceive();
+                this.showReceive = true;
             },
-            loadPay(){
+            loadReceive(){
                 let that = this;
                 axios.get('/classes/receive?cid='+this.editId) .then(function (response) {
-                    let pay = response.data.response.list;
-                    pay.forEach(function (item) {
+                    let Receive = response.data.response.list;
+                    Receive.forEach(function (item) {
                        if(item.receive === true) {
                            that.received.push(item);
                            that.nowReceiver.push(item.id);
@@ -58,30 +58,30 @@
                        }
 
                     });
-                    that.showPay = true;
+                    that.showReceive = true;
                 }).catch(function (error) {
 
                 });
             },
-            payHide(){
-                this.showPay = false;
-                this.resetPay();
+            ReceiveHide(){
+                this.showReceive = false;
+                this.resetReceive();
             },
-            resetPay(){
+            resetReceive(){
                 this.loading = false;
                 this.received = [];
                 this.editId = 0;
                 this.noReceiver = [];
                 this.nowReceiver = [];
             },
-            doSendPay(){
+            doSendReceive(){
                 let that = this;
-                this.dialog.openRefresh("请仔细确认是否缴费完成",function () {
+                this.dialog.openRefresh("请仔细确认学生名单",function () {
                     axios.post('receive/batch',{cid:that.editId,students:that.nowReceiver})
                         .then(function (response) {
                             if(response.data.code == 0) {
                                 that.dialog.openSuccess(function () {
-                                    that.payHide();
+                                    that.ReceiveHide();
                                 },'操作成功');
                             }else{
                                 that.dialog.openDialog("warning",callback);
