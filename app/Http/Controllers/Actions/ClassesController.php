@@ -17,6 +17,11 @@ use Illuminate\Http\Request;
 
 class ClassesController extends Controller
 {
+    /**
+     * 创建一个班级
+     * @param Request $request
+     * @return array
+     */
     public function create(Request $request)
     {
         try {
@@ -36,6 +41,11 @@ class ClassesController extends Controller
         return ['id' => $book->create(), 'create_at' => $time, 'update_at' => $time];
     }
 
+    /**
+     * 获取本班级的领书用户
+     * @param Request $request
+     * @return array
+     */
     public function receiveRecord(Request $request) : array
     {
         $classId = $request->get('cid',0);
@@ -47,6 +57,11 @@ class ClassesController extends Controller
         return ['list'=>ClassesService::receivedLimit(['class_id'=>[$classId]],false, -1)];
     }
 
+    /**
+     * 预留功能  哪些学生已经支付了
+     * @param Request $request
+     * @return array
+     */
     public function payRecord(Request $request) : array
     {
         $classId = $request->get('cid',0);
@@ -57,6 +72,11 @@ class ClassesController extends Controller
         return ['list'=>ClassesService::payLimit(['class_id'=>[$classId]],100,1,false, -1)];
     }
 
+    /**
+     * 更新班级
+     * @param Request $request
+     * @return array
+     */
     public function update(Request $request)
     {
         if(!($params = $this->_check($request, ['name', 'excepted_count','student_count']))){
@@ -75,6 +95,11 @@ class ClassesController extends Controller
         return ['row'=>$row];
     }
 
+    /**
+     * 删除班级
+     * @param Request $request
+     * @return array
+     */
     public function delete(Request $request)
     {
         $id = $request->input('id', 0);
@@ -87,6 +112,11 @@ class ClassesController extends Controller
         return ['code'=>$class->delete($id) >= 0 ? 0 : 1 ];
     }
 
+    /**
+     * 获取班级列表
+     * @param Request $request
+     * @return array
+     */
     public function select(Request $request)
     {
         $page = $request->input('page', 1);
@@ -96,12 +126,22 @@ class ClassesController extends Controller
         return ['list' => $class];
     }
 
+    /**
+     * 获取班级总数
+     * @param Request $request
+     * @return array
+     */
     public function count(Request $request)
     {
         $class = ClassesService::count([], false, -1);
         return ['list' => $class];
     }
 
+    /**
+     * 获取一个班级详情
+     * @param Request $request
+     * @return array
+     */
     public function get(Request $request)
     {
         $id = $this->_checkId($request);

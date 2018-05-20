@@ -11,7 +11,11 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-
+    /**
+     * 对学生执行批量出库
+     * @param Request $request
+     * @return array
+     */
     public function doBatchReceive(Request $request) : array
     {
         $classId = $request->post('cid',0);
@@ -25,6 +29,11 @@ class StudentController extends Controller
         return ['code'=> StudentService::batchReceive($classId, $students, $year, $upDown) ? 0 : 1];
     }
 
+    /**
+     * 获取学生出库列表
+     * @param Request $request
+     * @return array
+     */
     public function received(Request $request) : array
     {
         $id = $request->get('uid',0);
@@ -39,6 +48,11 @@ class StudentController extends Controller
         return ['list'=>$student->receiveLimit(['student_id'=>$id], $limit, $page, false, -1)];
     }
 
+    /**
+     * 对单个学生执行出库
+     * @param Request $request
+     * @return array
+     */
     public function doReceive(Request $request) : array
     {
         $id = $request->post('id',0);
@@ -55,6 +69,11 @@ class StudentController extends Controller
         return ['code'=>$student->doReceive($id, $books) ? 0 : 1];
     }
 
+    /**
+     * 获取这本教材已经已被出库
+     * @param Request $request
+     * @return array
+     */
     public function getBookHasReceived(Request $request): array
     {
         $sn = $request->get('sn', '');
@@ -76,7 +95,11 @@ class StudentController extends Controller
         return ['data' => $studentBook];
     }
 
-
+    /**
+     * 创建学生用户
+     * @param Request $request
+     * @return array
+     */
     public function create(Request $request): array
     {
         try {
@@ -95,6 +118,11 @@ class StudentController extends Controller
         return ['id' => $book->create(), 'create_at' => $time, 'update_at' => $time];
     }
 
+    /**
+     * 更新学生用户
+     * @param Request $request
+     * @return array
+     */
     public function update(Request $request): array
     {
         if (!($params = $this->_check($request, ['name', 'class_id', 'student_num']))) {
@@ -113,6 +141,11 @@ class StudentController extends Controller
         return ['row' => $row];
     }
 
+    /**
+     * 伪删除学生
+     * @param Request $request
+     * @return array
+     */
     public function delete(Request $request): array
     {
         $id = $request->input('id', 0);
@@ -125,6 +158,11 @@ class StudentController extends Controller
         return ['code' => $class->delete($id) >= 0 ? 0 : 1];
     }
 
+    /**
+     * 获取学生列表
+     * @param Request $request
+     * @return array
+     */
     public function select(Request $request): array
     {
         $page = $request->input('page', 1);
@@ -134,12 +172,22 @@ class StudentController extends Controller
         return ['list' => $class];
     }
 
+    /**
+     * 总数
+     * @param Request $request
+     * @return array
+     */
     public function count(Request $request)
     {
         $class = StudentService::count([], false, -1);
         return ['list' => $class];
     }
 
+    /**
+     * 获取学生
+     * @param Request $request
+     * @return array
+     */
     public function get(Request $request)
     {
         $id = $this->_checkId($request);

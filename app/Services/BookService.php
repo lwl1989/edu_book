@@ -134,7 +134,7 @@ class BookService extends ServiceBasic
     }
 
     /**
-     * 更新书籍计划
+     * 更新教材计划
      * @param $id
      * @return int
      */

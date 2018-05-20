@@ -12,12 +12,21 @@ use Illuminate\Http\Request;
 class PlanController extends Controller
 {
 
-
+    /**
+     * 总数
+     * @param Request $request
+     * @return array
+     */
     public function count(Request $request)
     {
         return ['count' => BookService::countPlan([], false, 1)];
     }
 
+    /**
+     * 教材计划
+     * @param Request $request
+     * @return array
+     */
     public function select(Request $request)
     {
         $page = $request->input('page', 1);
@@ -41,7 +50,11 @@ class PlanController extends Controller
         return ['list' => $book];
     }
 
-
+    /**
+     * 获取一个计划的详情
+     * @param Request $request
+     * @return array
+     */
     public function get(Request $request) : array
     {
         $id = $request->input('id', 0);
@@ -52,6 +65,11 @@ class PlanController extends Controller
         return ['data'=>BookService::getOnePlan($id)];
     }
 
+    /**
+     * 创建一个计划
+     * @param Request $request
+     * @return array
+     */
     public function create(Request $request) : array
     {
         try {
@@ -72,6 +90,11 @@ class PlanController extends Controller
         return ['id' => $book->createPlan(), 'create_time' => $time, 'update_time' => $time];
     }
 
+    /**
+     * 更新一个计划
+     * @param Request $request
+     * @return array
+     */
     public function update(Request $request) : array
     {
         $id = $request->input('id', 0);
@@ -92,6 +115,11 @@ class PlanController extends Controller
         return ['row' => $book->updatePlan($id)];
     }
 
+    /**
+     * 删除一个计划
+     * @param Request $request
+     * @return array
+     */
     public function delete(Request $request) : array
     {
         $id = $request->input('id', 0);
