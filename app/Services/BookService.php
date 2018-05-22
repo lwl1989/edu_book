@@ -94,7 +94,7 @@ class BookService extends ServiceBasic
         if(count($field) == 1) {
             $field[0] = 'book_order.*';
         }
-        $field = array_merge($field, ['book.name','book.sn','book.cost'],
+        $field = array_merge($field, ['book.name','book.sn','book.cost','book.author','book.company'],
             ['book_plan.plan_year','book_plan.up_down','book.created_at as plan_created','book.updated_at as plan_updated']);
 
         $list = $query
@@ -110,6 +110,7 @@ class BookService extends ServiceBasic
             ->take($limit)
             ->get($field)
             ->toArray();
+
         return $list;
     }
 

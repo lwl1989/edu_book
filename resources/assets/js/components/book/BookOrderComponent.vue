@@ -20,28 +20,41 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="order_num" label="入库号" width="120">
+                    <el-table-column prop="order_num" label="入库号">
                     </el-table-column>
-                    <el-table-column prop="name" label="教材名称" :show-overflow-tooltip=true width="100">
+                    <el-table-column prop="name" label="教材名称" >
+                    </el-table-column>
+                    <el-table-column prop="sn" label="SN" >
+                    </el-table-column>
+                    <el-table-column prop="company" label="出版社" >
+                    </el-table-column>
+                    <el-table-column prop="author" label="作者" >
+                    </el-table-column>
+                    <el-table-column prop="name" label="教材名称" :show-overflow-tooltip=true width="150">
                     </el-table-column>
                     <el-table-column prop="number" label="计划数量" width="100">
+                    </el-table-column>
+
+                    <el-table-column prop="cost" label="定价" width="100">
                     </el-table-column>
                     <el-table-column prop="price" label="购买价格" width="100">
                     </el-table-column>
                     <el-table-column prop="plan_year" label="年份" width="100">
                     </el-table-column>
-                    <el-table-column prop="created_at" label="创建时间" width="150">
+                    <el-table-column prop="created_at" label="入库时间" width="150">
                     </el-table-column>
-                    <el-table-column  label="操作">
+                    <el-table-column  label="操作" style="align:center;">
                         <template slot-scope="scope">
                             <el-button v-if="scope.row.status == 1" size="small"
                                        type="success" @click="eventStateUpdate(scope.row, scope.$index)">
                                 完成入库
                             </el-button>
+                            <br>
                             <el-button v-if="scope.row.status == 1" size="small"
                                        type="warning" @click="eventStateUpdate(scope.row, scope.$index)">
                                 删除入库
                             </el-button>
+                            <br>
                             <el-button v-if="scope.row.state == 2" size="small"
                                        type="danger" @click="eventStateUpdate(scope.row, scope.$index)">
                                 隐藏

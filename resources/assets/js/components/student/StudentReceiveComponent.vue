@@ -7,7 +7,7 @@
                 </el-table-column>
                 <el-table-column prop="name" label="教材名称" >
                 </el-table-column>
-                <el-table-column prop="notebook_num" label="笔记本数量" >
+                <el-table-column prop="notebook_num" label="作业本数量" >
                 </el-table-column>
                 <el-table-column prop="cost" label="标注价格" >
                 </el-table-column>
@@ -25,7 +25,7 @@
                 </el-table-column>
                 <el-table-column prop="name" label="教材名称">
                 </el-table-column>
-                <el-table-column prop="notebook_num" label="笔记本数量" >
+                <el-table-column prop="notebook_num" label="作业本数量" >
                 </el-table-column>
                 <el-table-column prop="cost" label="标注价格">
                 </el-table-column>

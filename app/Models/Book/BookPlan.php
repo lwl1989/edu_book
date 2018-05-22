@@ -3,7 +3,8 @@
 namespace App\Models\Book;
 
 
-use Illuminate\Database\Eloquent\Model;
+
+use App\Models\Model;
 
 class BookPlan extends Model
 {

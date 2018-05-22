@@ -20,17 +20,15 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="sn" label="教材sn" width="150" :show-overflow-tooltip=true>
+                    <el-table-column prop="name" label="教材名称" >
                     </el-table-column>
-                    <el-table-column prop="name" label="教材名称" width="150" :show-overflow-tooltip=true>
+                    <el-table-column prop="sn" label="SN" >
                     </el-table-column>
-                    <el-table-column prop="company" label="出版社" width="150">
+                    <el-table-column prop="company" label="出版社" >
                     </el-table-column>
-                    <el-table-column prop="author" label="作者" width="120">
+                    <el-table-column prop="author" label="作者" >
                     </el-table-column>
-                    <el-table-column prop="cost" label="标注价格" width="100">
-                    </el-table-column>
-                    <el-table-column prop="created_at" label="创建时间" width="150">
+                    <el-table-column prop="cost" label="定价">
                     </el-table-column>
                     <el-table-column  label="操作">
                         <template slot-scope="scope">
