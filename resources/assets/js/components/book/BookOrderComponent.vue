@@ -2,7 +2,40 @@
     <div id="app">
         <!-- 商品查詢列 -->
         <el-row>
+            <el-form :inline="true"  :model="searchOrderFrom"  ref="searchOrderFrom" class="demo-form-inline">
+                <el-form-item>
+                    <el-select v-model="searchOrderFrom.profile" placeholder="名稱">
+                        <el-option label="名稱" value="title"></el-option>
+                    </el-select>
+                </el-form-item>
 
+                <el-form-item>
+                    <el-input v-model="searchOrderFrom.profileValue" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-select v-model="searchOrderFrom.timeType">
+                        <el-option label="新增時間" value="create_time"></el-option>
+                        <el-option label="最後異動時間" value="update_time"></el-option>
+                        <el-option label="上架時間（起）" value="online_time"></el-option>
+                        <el-option label="上架時間（迄）" value="offline_time"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-date-picker
+                            v-model="searchOrderFrom.time"
+                            type="datetimerange"
+
+                            range-separator="~"
+                            start-placeholder="開始日期"
+                            end-placeholder="結束日期"
+                            align="right">
+                    </el-date-picker>
+                    <!--:picker-options="pickerOptions2"-->
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" icon="el-icon-search" @click="searchOrder()">查詢</el-button>
+                </el-form-item>
+            </el-form>
         </el-row>
         <!--  商品按鈕列 -->
         <el-row>
@@ -78,7 +111,17 @@
                 pageSize: 15,
                 total: 1,
                 loading: true,
-                book: []
+                book: [],
+                selectIds:[],
+                searchOrderFrom:{
+                    profile:"title",
+                    profileValue:"",
+
+                    time:[
+
+                    ],
+                    timeType:"create_time"
+                }
             }
         },
         mounted: function () {
@@ -89,9 +132,24 @@
             })
         },
         methods: {
+            searchOrder(){
+                this.loading = true;
+                this.handleCurrentChange(1);
+            },
+            getNowSearchUrl(){
+                let time = [];
+                if(this.searchOrderFrom.time.length > 0) {
+                    this.searchOrderFrom.time.forEach(function (value) {
+                        time.push(value.getTime());
+                    });
+                }
+                time = time.join(',');
+                return this.searchOrderFrom.profile+'='+this.searchOrderFrom.profileValue+'&'+this.searchOrderFrom.timeType+'='+time;
+            },
             getMaxPage() {
                 let that = this;
-                axios.get('/book/order/count')
+                let url = '/book/order/count'+'?'+this.getNowSearchUrl();
+                axios.get(url)
                     .then(function (response) {
                         that.total = response.data.response.count;
                     })
@@ -104,7 +162,8 @@
 
             handleCurrentChange(currentPage) {
                 let that = this;
-                axios.get('/book/order/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
+                let url = '/book/order/select?page='+currentPage+'&limit='+that.pageSize+'&'+this.getAdNowSearchUrl();
+                axios.get(url) .then(function (response) {
                     that.book = response.data.response.list;
                 }).catch(function (error) {
                     that.openRefresh('網絡不穩定，是否重試？',function () {
