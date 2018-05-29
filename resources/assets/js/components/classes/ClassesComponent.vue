@@ -18,19 +18,21 @@
                             type="index"
                             width="50">
                     </el-table-column>
-                    <el-table-column prop="name" label="班级名称(点击查看班级领书状况)" >
-                        <template slot-scope="scope">
-                            <el-button  size="small"
-                                        type="text" @click="openClassReceiver(scope.row)">
-                                {{scope.row.name}}
-                            </el-button>
-                        </template>
+                    <el-table-column prop="name" label="班级名称" >
                     </el-table-column>
                     <el-table-column prop="student_count" label="现有人数" >
                     </el-table-column>
                     <el-table-column prop="excepted_count" label="预计人数" >
                     </el-table-column>
-                    <el-table-column prop="created_at" label="创建时间" width="150">
+                    <el-table-column prop="excepted_count" label="已领教材人数(点击查看班级领书状况)" >
+                        <template slot-scope="scope">
+                            <el-button  size="small"
+                                        type="text" @click="openClassReceiver(scope.row)">
+                                {{scope.row.excepted_count}}
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="created_at" label="创建时间" >
                     </el-table-column>
                     <el-table-column  label="操作">
                         <template slot-scope="scope">
@@ -38,6 +40,7 @@
                                         type="edit" @click="editClasses(scope.row, scope.$index)">
                                 编辑班级
                             </el-button>
+                            <div style="width:100%;height: 3px;"> </div>
                             <el-button size="small"
                                        type="warning" @click="deleteClasses(scope.row, scope.$index)">
                                 删除班级

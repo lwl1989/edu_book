@@ -77,12 +77,12 @@
                                        type="success" @click="eventStateUpdate(scope.row, scope.$index)">
                                 完成入库
                             </el-button>
-                            <br>
+                            <div style="width:100%;height: 3px;"> </div>
                             <el-button v-if="scope.row.status === 1" size="small"
                                        type="warning" @click="eventStateUpdate(scope.row, scope.$index)">
                                 删除入库
                             </el-button>
-                            <br>
+                            <div style="width:100%;height: 3px;"> </div>
                             <el-button v-if="scope.row.state === 2" size="small"
                                        type="danger" @click="eventStateUpdate(scope.row, scope.$index)">
                                 隐藏
@@ -162,7 +162,7 @@
 
             handleCurrentChange(currentPage) {
                 let that = this;
-                let url = '/book/order/select?page='+currentPage+'&limit='+that.pageSize+'&'+this.getAdNowSearchUrl();
+                let url = '/book/order/select?page='+currentPage+'&limit='+that.pageSize+'&'+this.getNowSearchUrl();
                 axios.get(url) .then(function (response) {
                     that.book = response.data.response.list;
                 }).catch(function (error) {
