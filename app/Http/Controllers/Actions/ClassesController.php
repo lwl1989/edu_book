@@ -58,6 +58,22 @@ class ClassesController extends Controller
     }
 
     /**
+     * 获取本班级的哪些书已经领了
+     * @param Request $request
+     * @return array
+     */
+    public function receiveBookRecord(Request $request) : array
+    {
+        $classId = $request->get('cid',0);
+
+        if($classId == 0) {
+            return ['code'=>ErrorConstant::PARAMS_ERROR];
+        }
+
+        return ['list'=>ClassesService::receivedLimit(['class_id'=>[$classId]],false, -1)];
+    }
+
+    /**
      * 预留功能  哪些学生已经支付了
      * @param Request $request
      * @return array

@@ -58,7 +58,7 @@
             </el-col>
         </el-row>
 
-        <class-receive ref="receiver"></class-receive>
+        <class-receive ref="Receivers"></class-receive>
     </div>
 </template>
 
@@ -85,7 +85,7 @@
         },
         methods: {
             openClassReceiver(item){
-                this.$refs.receiver.ClassReceive(item.id);
+                this.$refs.Receivers.ClassReceive(item.id);
             },
             getClassesMaxPage() {
                 let that = this;

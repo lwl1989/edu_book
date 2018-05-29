@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Models\Log\SqlErrorLog;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Support\Responsable;
@@ -12,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class Handler extends ExceptionHandler
 {
@@ -78,8 +81,8 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof Responsable) {
             return $e->toResponse($request);
         }
-        //var_dump($e->getTraceAsString());exit();
-        $e = $this->prepareException($e);
+
+
 
         if ($e instanceof HttpResponseException) {
             return $e->getResponse();
@@ -103,13 +106,9 @@ class Handler extends ExceptionHandler
     {
         $e = $this->prepareException($e);
 
-        $status = 400;
-        if ($e instanceof HttpResponseException) {
-            $status = 419;
-        } elseif ($e instanceof AuthenticationException) {
+        $status = 200;
+        if ($e instanceof AuthenticationException) {
             $status = 401;
-        } elseif ($e instanceof ValidationException) {
-            $status = 400;
         }
 
         $headers = $this->isHttpException($e) ? $e->getHeaders() : [];
@@ -118,8 +117,21 @@ class Handler extends ExceptionHandler
         $data['response'] = $e->getMessage();
         $code = intval($e->getCode());
         $code = $code > 0 ? $code : 1;
-        $data['code'] = $code;
 
+        if($e instanceof MethodNotAllowedException or $e instanceof NotFoundHttpException) {
+            $data = '1000';
+        }
+        if($e instanceof \PDOException)
+        {
+            $errorLogId = SqlErrorLog::query()->insertGetId([
+                'line'      =>  $e->getLine(),
+                'file'      =>  $e->getFile(),
+                'error_msg' =>  $e->getMessage()
+            ]);
+            $code = ErrorConstant::SYSTEM_ERR_PDO;
+            $data['response'] = ['error_log_id'=>$errorLogId];
+        }
+        $data['code'] = $code;
         return new JsonResponse(
             $data, $status, $headers,
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
@@ -133,18 +145,58 @@ class Handler extends ExceptionHandler
     private function _apiRender(Exception $exception) : Response {
         $e = $this->prepareException($exception);
 
-        $status = 400;
-        if ($e instanceof HttpResponseException) {
-            $status = 419;
-        } elseif ($e instanceof AuthenticationException) {
-            $status = 401;
-        } elseif ($e instanceof ValidationException) {
-            $status = 400;
-        }
         $code = intval($e->getCode());
         $code = $code > 0 ? $code : 1;
-        return response()->json(['code'=>$code, 'response' => $e->getMessage()], $status);
+        $status = 200;
+
+        //只有認證錯誤返回401
+        if ($e instanceof AuthenticationException) {
+            $code = ErrorConstant::UN_AUTH_ERROR;
+            $status = 401;
+        }
+        /* 只有認證錯誤單獨返回
+        if ($e instanceof HttpResponseException) {
+           $status = 419;
+        } elseif ($e instanceof AuthenticationException) {
+            $code = ErrorConstant::UN_AUTH_ERROR;
+            $status = 401;
+        } elseif ($e instanceof ValidationException) {
+           $status = 400;
+        }
+        */
+
+        if($e instanceof MethodNotAllowedException or $e instanceof NotFoundHttpException) {
+            $code = '1000';
+        }
+        if($e instanceof \PDOException)
+        {
+            $errorLogId = SqlErrorLog::query()->insertGetId([
+                'line'      =>  $e->getLine(),
+                'file'      =>  $e->getFile(),
+                'error_msg' =>  $e->getMessage()
+            ]);
+            $code = ErrorConstant::SYSTEM_ERR_PDO;
+            return response()->json(['code'=>strval($code), 'response' => ['error_log_id'=>$errorLogId]], $status);
+        }
+
+        return response()->json(['code'=>strval($code), 'response' => $e->getMessage()], $status);
     }
 
+
+    /**
+     * Convert an authentication exception into a response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @return \Illuminate\Http\Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+
+        // route('login') =>  https => http => It's https://xxx.com/login => http://xxx.com/login  todo:
+        return $request->expectsJson()
+            ? response()->json(['message' => $exception->getMessage()], 401)
+            : redirect()->guest(env('APP_URL','localhost:8000').'/login');
+    }
 
 }

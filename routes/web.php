@@ -57,6 +57,7 @@ Route::group(['prefix' => 'classes', 'middleware' => ['format']], function () {
 
 
     Route::get('receive', 'Actions\ClassesController@receiveRecord');
+    Route::get('book/receive', 'Actions\ClassesController@receiveBookRecord');
     //Route::get('received', 'Actions\ClassesController@payRecord');
 });
 
