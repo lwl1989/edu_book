@@ -64,6 +64,7 @@ class ClassesController extends Controller
      */
     public function receiveBookRecord(Request $request) : array
     {
+        //TODO： 获取已领书籍列表
         $classId = $request->get('cid',0);
 
         if($classId == 0) {
