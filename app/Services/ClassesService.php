@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: limars
- * Date: 2018/4/12
- * Time: 22:43
- */
 
 namespace App\Services;
 
 
+use App\Models\Book\Book;
 use App\Models\Classes\Classes;
+use App\Models\Classes\ClassesBookReceive;
 use App\Models\Classes\ClassesReceive;
 use App\Models\Student\Student;
 
@@ -34,6 +30,58 @@ class ClassesService extends ServiceBasic
 
         return empty($list) ? [] : $list->toArray();
     }
+
+    public static function receivedBookLimit(array $conditions, bool $deleted = false, int $status = -1): array
+    {
+        self::setSelfModel(ClassesBookReceive::class);
+        $query = self::_getQuery($conditions, $deleted, $status);
+        $num = $query->count();
+        if($num > 0) {
+            $list = $query
+                ->join('book', function ($query) {
+                    $query->on('book.id', '=', 'class_book_receive.book_id');
+                })
+                ->get(['book.id as bid','book.name','book.sn','book.cost','class_book_receive.received_time','class_book_receive.id']);
+            if(!empty($list)) {
+                return $list->toArray();
+            }
+            return [];
+        }else{
+            return [];
+        }
+    }
+
+    public function getOneBySnAndCheckReceive(string $sn, $userId) : array
+    {
+        self::setSelfModel(Book::class);
+        $model = self::getModelInstance();
+
+        $field = ['book.id','book.name','book.sn','book.cost','book_plan.plan_year','book_plan.up_down','book_plan.notebook_num','book_plan.id as plan_id'];
+        $data = $model->newQuery()
+            ->join('book_plan',function($query){
+                $query->on('book_plan.book_id','=','book.id');
+            })
+            ->where('sn','=', $sn)->limit(1)->get($field);
+        $data = empty($data) ? [] : $data->toArray();
+        if(empty($data)) {
+            return $data;
+        }
+
+        $data = $data[0];
+        $classReceive = ClassesBookReceive::query()
+            ->where('student_id','=',$userId)
+            ->where('book_id','=',$data['id'])
+            ->where('plan_id','=',$data['plan_id'])
+            ->first(['id']);
+
+        $data['received'] = true;
+        if(empty($classReceive)) {
+            $data['received'] = false;
+        }
+
+        return $data;
+    }
+
 
     public static function receivedLimit(array $conditions, bool $deleted = false, int $status = -1): array
     {

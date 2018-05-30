@@ -20,12 +20,10 @@
 
             <el-button type="text" icon="el-icon-success">已领教材</el-button>
 
-            <el-table :data="books_received" stripe style="width: 100%" v-if="loading" :row-class-name="tableRowClassName" >
+            <el-table :data="books_received" stripe style="width: 100%" v-loading="loading" >
                 <el-table-column prop="sn" label="教材sn" >
                 </el-table-column>
                 <el-table-column prop="name" label="教材名称" >
-                </el-table-column>
-                <el-table-column prop="notebook_num" label="作业本数量" >
                 </el-table-column>
                 <el-table-column prop="cost" label="标注价格" >
                 </el-table-column>
@@ -42,8 +40,6 @@
                 <el-table-column prop="sn" label="教材sn">
                 </el-table-column>
                 <el-table-column prop="name" label="教材名称">
-                </el-table-column>
-                <el-table-column prop="notebook_num" label="作业本数量" >
                 </el-table-column>
                 <el-table-column prop="cost" label="标注价格">
                 </el-table-column>
@@ -96,12 +92,15 @@
                 this.editId = editId;
                 this.loadReceive();
                 this.loadReceiveBook();
-                this.showReceive = true;
+
             },
             loadReceiveBook(){
                 let that = this;
                 axios.get('/classes/book/receive?cid='+this.editId) .then(function (response) {
                     that.books_received = response.data.response.list;
+                    console.log(that.books_received);
+                    that.showReceive = true;
+                    that.loading = false;
                 }).catch(function (error) {
 
                 });
@@ -142,7 +141,13 @@
                             let book = response.data.response.data;
                             let exists = false;
                             that.books.forEach(function(item){
-                                if(item.id === book.id) {
+                                if(item.sn === book.sn) {
+                                    that.dialog.openWarning(function () {},'教材已存在');
+                                    exists = true;
+                                }
+                            });
+                            that.books_received.forEach(function(item){
+                                if(item.sn === book.sn) {
                                     that.dialog.openWarning(function () {},'教材已存在');
                                     exists = true;
                                 }

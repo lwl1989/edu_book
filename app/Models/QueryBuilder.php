@@ -40,7 +40,7 @@ class QueryBuilder extends Builder
     public function insert(array $values)
     {
         $id = parent::insert($values);
-        $this->log($id);
+        $this->log($id, '新增',$this->grammar->compileInsert($this, $values));
         return $id;
     }
 
@@ -51,8 +51,9 @@ class QueryBuilder extends Builder
      */
     public function update(array $values)
     {
-        $this->log();
-        return parent::update($values);
+        $num = parent::update($values);
+        $this->log($num, '更新',$this->grammar->compileUpdate($this, $values));
+        return $num;
     }
 
     /**
@@ -62,7 +63,7 @@ class QueryBuilder extends Builder
      */
     public function delete($id = null)
     {
-        $this->log();
+        $this->log($id, '刪除', $this->grammar->compileDelete($this));
         return parent::delete($id);
     }
 
@@ -87,18 +88,23 @@ class QueryBuilder extends Builder
     /**
      * db統一封裝日志  增刪改 保存SQL 和 remark
      * @param null $id
+     * @param $sql
+     * @param $operate
      */
-    private function log($id = null)
+    private function log($id = null, string $operate, string $sql = '')
     {
         $model = $this->getModel();
         if ($model instanceof ModelExtInterface and $model->needLog()) {
             $data = [];
-//            if ($id !== null) {
-//                $data['id'] = $id;
-//            }
-            $sql = $this->toSql();
-            $data['remark'] = $model->getLogRemark();
+
+            $sql =  empty($sql) ? $this->toSql() : $sql;
+            $data['remark'] = '';
             $data['operator_id'] = Auth::id(); //who operate
+            if($id != null) {
+                $data['operate_msg'] = sprintf("ID:爲 %s 的用戶對 %s 表進行了 %s 操作, 數據ID爲: %s", $data['operator_id'], $this->from, $operate, $id);
+            }else {
+                $data['operate_msg'] = sprintf("ID:爲 %s 的用戶對 %s 表進行了 %s 操作", $data['operator_id'], $this->from, $operate);
+            }
             $data['sql'] = $sql;
             Logs::query()->insert($data);
         }

@@ -71,7 +71,7 @@ class ClassesController extends Controller
             return ['code'=>ErrorConstant::PARAMS_ERROR];
         }
 
-        return ['list'=>ClassesService::receivedLimit(['class_id'=>[$classId]],false, -1)];
+        return ['list'=>ClassesService::receivedBookLimit(['class_id'=>[$classId]],false, -1)];
     }
 
     /**
