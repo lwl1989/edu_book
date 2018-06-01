@@ -2,7 +2,40 @@
     <div id="app">
         <!-- 商品查詢列 -->
         <el-row>
+            <el-form :inline="true"  :model="searchBookFrom"  ref="searchBookFrom" class="demo-form-inline">
+                <el-form-item>
+                    <el-select v-model="searchBookFrom.profile" placeholder="名稱">
+                        <el-option label="名稱" value="title"></el-option>
+                    </el-select>
+                </el-form-item>
 
+                <el-form-item>
+                    <el-input v-model="searchBookFrom.profileValue" auto-complete="off"></el-input>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-select v-model="searchBookFrom.timeType">
+                        <el-option label="新增时间" value="create_time"></el-option>
+                        <el-option label="修改时间" value="update_time"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-date-picker
+                            v-model="searchBookFrom.time"
+                            type="daterange"
+                            align="right"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions2">
+                    </el-date-picker>
+                    <!--:picker-options="pickerOptions2"-->
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" icon="el-icon-search" @click="searchAd()">查詢</el-button>
+                </el-form-item>
+            </el-form>
         </el-row>
         <!--  商品按鈕列 -->
         <el-row>
@@ -33,7 +66,7 @@
                     <el-table-column  label="操作">
                         <template slot-scope="scope">
                             <el-button  size="small"
-                                       type="edit" @click="editBook(scope.row, scope.$index)">
+                                       type="edit" @click="editBook(scope.row)">
                                 编辑教材
                             </el-button>
                             <el-button size="small"
@@ -64,7 +97,14 @@
                 pageSize: 15,
                 total: 1,
                 loading: true,
-                book: []
+                book: [],
+                searchBookFrom: {
+                    profile: "title",
+                    profileValue: "",
+
+                    time: [],
+                    timeType: "create_time"
+                }
             }
         },
         mounted: function () {
@@ -77,12 +117,13 @@
         methods: {
             getMaxPage() {
                 let that = this;
-                axios.get('/book/count')
+                let url = '/book/count?'+this.getAppNowSearchUrl();
+                axios.get(url)
                     .then(function (response) {
                         that.total = response.data.response.count;
                     })
                     .catch(function (error) {
-                        that.openRefresh('網絡不穩定，是否重試？',function () {
+                        that.openRefresh(error.toString(),function () {
                             window.location.reload(true)
                         });
                     });
@@ -90,13 +131,24 @@
 
             handleCurrentChange(currentPage) {
                 let that = this;
-                axios.get('/book/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
+                let url = '/book/select?page='+currentPage+'&limit='+that.pageSize+'&'+this.getAppNowSearchUrl();
+                axios.get(url) .then(function (response) {
                     that.book = response.data.response.list;
                 }).catch(function (error) {
-                    that.openRefresh('網絡不穩定，是否重試？',function () {
+                    that.openRefresh(error.toString(),function () {
                         window.location.reload(true)
                     });
                 });
+            },
+            getAppNowSearchUrl(){
+                let time = [];
+                if(this.searchBookFrom.time.length > 0) {
+                    this.searchBookFrom.time.forEach(function (value) {
+                        time.push(value.getTime());
+                    });
+                }
+                time = time.join(',');
+                return this.searchBookFrom.profile+'='+this.searchBookFrom.profileValue+'&'+this.searchBookFrom.timeType+'='+time;
             },
             openBLSuccess(callback){
                 this.$message({
@@ -137,13 +189,13 @@
                     //console.log(e)
                 });
             },
-            editBook(item,index){
+            editBook(item){
                 this.$router.push({path:'/book/detail/'+item.id});
             },
             deleteBook(item,index){
                 let that = this;
                 axios.delete('/book/delete?id='+item.id) .then(function (response) {
-                    if(response.data.code == 0) {
+                    if(response.data.code === 0) {
                         that.$emit('success',function () {
                             that.book.splice(index,1);
                         });

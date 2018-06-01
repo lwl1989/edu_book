@@ -124,28 +124,59 @@ trait ServiceTrait
         $service = self::_getInstance();
         $model = $service->getModelInstance();
 
-
-        $conditions['deleted'] = ['=',$deleted ? 1 : 0];
         if($status != -1) {
             $conditions['status'] = ['=',$status];
         }
+
         $query = $model::query();
         $table = $model->getTable();
         foreach ($conditions as $field=>$operate) {
-            $field = $table.'.'.$field;
+            if ($field == 'order' and is_array($operate)) {
+                $query->orderBy($operate['field'], $operate['sort']??'desc');
+                continue;
+            }
+
+            if ($field == 'or' and is_array($operate)) {
+
+                $query->orWhere(function( $query) use($operate, $table){
+                    /**@var $query Builder **/
+                    foreach ($operate as $key=>$value) {
+                        if(is_array($value)) {
+                            $key = $table . '.' . $key;
+                            $query->where($key, $value[0], $value[1]);
+                        }
+                    }
+                });
+
+                continue;
+            }
+
+            if ( strpos($field,'.') === false ) {
+                $field = $table.'.'.$field;
+            }
+
             if($field == $table.'.keyword') {
                 $field = $table.'.'.$service->searchField;
                 $query->where($field, 'like', '%'.$operate.'%');
                 continue;
             }
+
             if(is_array($operate)) {
                 if(count($operate) == 2) {
-                    $query->where($field, $operate[0], $operate[1]);
+                    if( $operate[0] == 'between'){
+                        $query->whereBetween($field, $operate[1]);
+                    }else if($operate[0] == 'in'){
+                        $query->whereIn($field, $operate[1]);
+                    }elseif($operate[0] == 'like'){
+                        $query->where($field, 'like', '%'.$operate[1].'%');
+                    }else{
+                        $query->where($field, $operate[0], $operate[1]);
+                    }
                 }else{
                     $query->where($field, '=', $operate);
                 }
             }else{
-                $query->where($field,$operate);
+                $query->where($field, $operate);
             }
         }
         return $query;

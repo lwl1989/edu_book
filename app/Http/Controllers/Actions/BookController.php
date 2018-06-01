@@ -11,6 +11,62 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
+    private function _buildCondition(Request $request): array
+    {
+        $condition = [];
+
+        if (strpos($request->getRequestUri(), '/api') === 0) {
+            $condition['online_time'] = ['<', date('Y-m-d H:i:s')];
+            $condition['offline_time'] = ['>', date('Y-m-d H:i:s')];
+        } else {
+            $params = $request->query();
+            if (!empty($params)) {
+                foreach ($params as $key => $value) {
+                    switch ($key) {
+                        case strpos($key, 'time') !== false:
+                            if (!empty($value)) {
+                                $time = explode(',', $value);
+                                if (count($time) === 2) {
+
+                                    $condition[$key] = ['between', [
+                                        date('Y-m-d H:i:s', substr($time[0], 0, 10)),
+                                        date('Y-m-d H:i:s', substr($time[1], 0, 10))
+                                    ]
+                                    ];
+                                }
+                            }
+                            break;
+                        case 'page':
+                        case 'limit':
+                            break;
+                        case 'title':
+                            if (!empty($value)) {
+                                $condition['keyword'] = ['like', $value];
+                            }
+                            break;
+                        default:
+                            if (!empty($value)) {
+                                $condition[$key] = $value;
+                            }
+                    }
+
+                }
+            }
+        }
+        $keyword = $request->input('keyword', '');
+        if(!empty($keyword)) {
+            $conditions['keyword'] = $keyword;
+        }
+        $filed = $request->input('field',false);
+        if($filed !== false) {
+            $fields = explode(',',$filed);
+            if(is_array($fields)) {
+                BookService::setSelfListField($fields);
+            }
+        }
+        return $condition;
+    }
+
     public function get(Request $request) : array
     {
         $id = $request->input('id', 0);
@@ -36,21 +92,8 @@ class BookController extends Controller
     {
         $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);
-        $conditions = [];
 
-        $keyword = $request->input('keyword', '');
-        if(!empty($keyword)) {
-            $conditions['keyword'] = $keyword;
-        }
-        $filed = $request->input('field',false);
-        if($filed !== false) {
-            $fields = explode(',',$filed);
-            if(is_array($fields)) {
-                BookService::setSelfListField($fields);
-            }
-        }
-
-        $book = BookService::limit($conditions, $limit, $page, false, 1);
+        $book = BookService::limit($this->_buildCondition($request), $limit, $page, false, 1);
         return ['list' => $book];
     }
 
@@ -116,11 +159,12 @@ class BookController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return array
      */
-    public function count()
+    public function count(Request $request)
     {
-        return ['count' => BookService::count([], false, 1)];
+        return ['count' => BookService::count($this->_buildCondition($request), false, 1)];
     }
 
 
