@@ -10,8 +10,10 @@
 
         <el-row>
             <el-tag>可以选择不同年份计划</el-tag>
-            <el-tabs v-model="selectYear" @tab-click="handleClick" >
-                <el-tab-pane v-for="year in years" :label="year.str" :name="year.year.toString()"></el-tab-pane>
+            <el-tabs v-model="selectYear" @tab-click="handleClick">
+                <template v-for="(year,index) in years">
+                    <el-tab-pane  :label="year.str" :name="year.year.toString()"></el-tab-pane>
+                </template>
             </el-tabs>
         </el-row>
 
