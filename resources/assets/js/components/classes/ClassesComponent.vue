@@ -36,6 +36,8 @@
                     </el-table-column>
                     <el-table-column prop="excepted_count" label="预计人数" >
                     </el-table-column>
+                    <el-table-column prop="price_count" label="需缴费用" >
+                    </el-table-column>
                     <el-table-column prop="excepted_count" label="已领教材人数(点击查看班级领书状况)" >
                         <template slot-scope="scope">
                             <el-button  size="small"

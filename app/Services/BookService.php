@@ -11,6 +11,7 @@ namespace App\Services;
 
 use App\Exceptions\LogicException;
 use App\Models\Book\Book;
+use App\Models\Book\BookClassPlan;
 use App\Models\Book\BookOrder;
 use App\Models\Book\BookPlan;
 use App\Models\Classes\Classes;
@@ -53,20 +54,17 @@ class BookService extends ServiceBasic
             ->toArray();
 
         if(!empty($list)) {
-            $classesIds = [];
-            foreach ($list as &$v) {
-                if(!empty($v['classes']) and !is_array($v['classes'])) {
-                    $v['classes'] = json_decode($v['classes']);
-                }
-                $classesIds += $v['classes'];
-            }
+            $classPlan = BookClassPlan::query()
+                ->whereIn('plan_id', array_column($list, 'id'))
+                ->get(['plan_id','class_id'])->toArray();
+            $classesIds = array_column($classPlan, 'class_id');
             $classes = Classes::query()->whereIn('id', $classesIds)->limit(count($classesIds))->get(['id','name'])->toArray();
             $classes = array_column($classes, 'name','id');
             foreach ($list as &$v) {
                 $classesList = [];
-                if(!empty($v['classes'])) {
-                    foreach ($v['classes'] as $id) {
-                        $classesList[] = $classes[$id];
+                foreach ($classPlan as  $value) {
+                    if($v['id'] == $value['plan_id']) {
+                        $classesList[] = $classes[$value['class_id']];
                     }
                 }
                 $v['class_list'] = implode($classesList,'、');
@@ -121,7 +119,24 @@ class BookService extends ServiceBasic
     public function createPlan(): int
     {
         self::setSelfModel(BookPlan::class);
-        return parent::create();
+
+        $classes = [];
+        if(isset($this->attr['classes'])) {
+            $classes = $this->getAttr('classes');
+            unset($this->attr['classes']);
+        }
+        $id = parent::create();
+
+        if(!empty($classes)) {
+            foreach ($classes as $cid) {
+                BookClassPlan::query()->insert([
+                   'plan_id'    =>  $id,
+                   'class_id'   =>  $cid
+                ]);
+            }
+        }
+
+        return $id;
     }
 
     /**
@@ -145,7 +160,23 @@ class BookService extends ServiceBasic
         if(in_array('book_id', $this->getAttr())) {
             throw new LogicException("不能修改计划的书本");
         }
-        return parent::update($id);
+        $classes = [];
+        if(isset($this->attr['classes'])) {
+            $classes = $this->getAttr('classes');
+            unset($this->attr['classes']);
+        }
+        $row = parent::update($id);
+
+        if(!empty($classes)) {
+            BookClassPlan::query()->where('plan_id',$id)->delete();
+            foreach ($classes as $cid) {
+                BookClassPlan::query()->insert([
+                    'plan_id'    =>  $id,
+                    'class_id'   =>  $cid
+                ]);
+            }
+        }
+        return $row;
     }
 
     /**
@@ -215,7 +246,7 @@ class BookService extends ServiceBasic
     }
 
     /**
-     * 获取一个技术
+     * 获取一个计划
      * @param $id
      * @return array
      */

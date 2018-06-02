@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Models\Book\Book;
+use App\Models\Book\BookPlan;
 use App\Models\Classes\Classes;
 use App\Models\Classes\ClassesBookReceive;
 use App\Models\Classes\ClassesReceive;
@@ -12,6 +13,31 @@ use App\Models\Student\Student;
 class ClassesService extends ServiceBasic
 {
     protected $model = Classes::class;
+
+    public static function limit(array $conditions, int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
+    {
+        $query = self::_getQuery($conditions, $deleted, $status);
+        $list = $query
+            ->leftJoin('class_receive',function($query){
+                $query->on('class_receive.class_id','=','classes.id');
+            })
+            ->skip(($page-1)*$limit)
+            ->take($limit)
+            ->get(['classes.*','class_receive.student_received as receivers'])
+            ->toArray();
+        array_walk($list, function(&$v){
+            if(!empty($v['receivers'])) {
+                $v['receivers'] = array_values(json_decode($v['receivers'], true));
+            }
+        });
+        $classIds = array_column($list, 'id');
+
+//        Db::raw('SELECT * FROM `article`WHERE JSON_CONTAINS(classes, \'["Mysql"]\');')
+//        BookPlan::query()->whereIn()
+
+        return $list;
+        //return parent::limit($conditions, $limit, $page, $deleted, $status);
+    }
 
     public static function payLimit(array $conditions, int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
     {
@@ -138,7 +164,7 @@ class ClassesService extends ServiceBasic
             if(count($noReceive) != $noReceivedUser) {
                 $noReceive = array_column($noReceivedUser, 'id');
                 ClassesReceive::query()->where('id','=',$list['id'])
-                    ->update(['student_no_receive'=>json_encode($noReceive)]);
+                    ->update(['student_no_receive'=>json_encode(array_values($noReceive))]);
             }
 
             return $response;

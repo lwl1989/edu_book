@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: limars
- * Date: 2018/6/2
- * Time: 23:28
- */
 
 namespace App\Models\Book;
 
 
-class BookClassPlan
-{
+use App\Models\Model;
 
+class BookClassPlan extends Model
+{
+    protected $table = 'book_plan_class';
 }

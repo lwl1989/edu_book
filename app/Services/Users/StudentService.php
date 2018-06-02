@@ -16,6 +16,14 @@ class StudentService extends ServiceBasic
     protected $model = Student::class;
     protected $listField = ['student.id','student.name','student.student_num','student.created_at','classes.name as class_name'];
 
+    /**
+     * 批量对某班级的学生执行出库
+     * @param $classId
+     * @param array $students
+     * @param $year
+     * @param int $upDown
+     * @return bool
+     */
     public static function batchReceive($classId, array $students, $year, $upDown = 0) : bool
     {
 
@@ -38,10 +46,10 @@ class StudentService extends ServiceBasic
                     return intval($v);
                 }, array_unique(array_merge($exists['student_received'], $students)));
                 ClassesReceive::query()->where('id','=',$exists['id'])
-                    ->update(['student_received'=>json_encode($students)]);
+                    ->update(['student_received'=>json_encode(array_values($students))]);
             }else{
                 ClassesReceive::insert([
-                    'student_received'=>json_encode($students),
+                    'student_received'=>json_encode(array_values($students)),
                     'class_id' =>$classId,
                     'year'=>$year,
                     'un_down'=>$upDown
@@ -55,6 +63,15 @@ class StudentService extends ServiceBasic
         }
     }
 
+    /**
+     * 获取学生单独领取书籍的列表
+     * @param array $conditions
+     * @param int $limit
+     * @param int $page
+     * @param bool $deleted
+     * @param int $status
+     * @return array
+     */
     public static function limit(array $conditions, int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
     {
             $query = self::_getQuery($conditions, $deleted, $status);
@@ -70,6 +87,15 @@ class StudentService extends ServiceBasic
             return $list;
     }
 
+    /**
+     * 获取学生单独领取书籍的列表
+     * @param array $conditions
+     * @param int $limit
+     * @param int $page
+     * @param bool $deleted
+     * @param int $status
+     * @return array
+     */
     public static function receiveLimit(array $conditions, int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
     {
         self::setSelfModel(StudentReceive::class);
@@ -92,6 +118,12 @@ class StudentService extends ServiceBasic
         }
     }
 
+    /**
+     * 获取某本书是否被某个学生领取过
+     * @param string $sn
+     * @param $userId
+     * @return array
+     */
     public function getOneBySnAndCheckReceive(string $sn, $userId) : array
     {
         self::setSelfModel(Book::class);
@@ -123,6 +155,12 @@ class StudentService extends ServiceBasic
         return $data;
     }
 
+    /**
+     * 执行学生单独领书出库
+     * @param $id
+     * @param array $books
+     * @return bool
+     */
     public static function doReceive($id, array $books) : bool
     {
         try {

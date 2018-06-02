@@ -8,7 +8,6 @@ class Model extends \Illuminate\Database\Eloquent\Model implements ModelExtInter
     use ExtensionModelTrait;
 
 
-
     protected function newBaseQueryBuilder()
     {
         $connection = $this->getConnection();
