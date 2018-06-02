@@ -9,12 +9,15 @@
         </el-row>
 
         <el-row>
-            <el-tag>可以选择不同年份计划</el-tag>
-            <el-tabs v-model="selectYear" @tab-click="handleClick">
-                <template v-for="(year,index) in years">
-                    <el-tab-pane  :label="year.str" :name="year.year.toString()"></el-tab-pane>
-                </template>
-            </el-tabs>
+
+            <el-col :span="18">
+                <el-tag>可以选择不同年份计划</el-tag>
+                <el-tabs v-model="selectYear" @tab-click="handleClick">
+                    <template v-for="year in years">
+                        <el-tab-pane  :label="year.str" :name="year.year.toString()"></el-tab-pane>
+                    </template>
+                </el-tabs>
+            </el-col>
         </el-row>
 
         <!--  商品Table列 -->
@@ -84,7 +87,7 @@
                 classes: [],
                 years: [],
                 nowYear: new Date().getFullYear(),
-                selectYear: new Date().getFullYear().toString()
+                selectYear: new Date().getFullYear().toString() + '_1'
             }
         },
         components:{ClassReceive},
