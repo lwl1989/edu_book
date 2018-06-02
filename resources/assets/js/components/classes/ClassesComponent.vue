@@ -1,13 +1,20 @@
 <template>
     <div id="app">
-        <el-row>
 
-        </el-row>
         <el-row>
             <el-col :span="24" style="margin-top: 20px;">
                 <el-button type="primary" icon="el-icon-goods" @click="addClasses">新增班级</el-button>
             </el-col>
+            <br/><br/><br/>
         </el-row>
+
+        <el-row>
+            <el-tag>可以选择不同年份计划</el-tag>
+            <el-tabs v-model="selectYear" @tab-click="handleClick" >
+                <el-tab-pane v-for="year in years" :label="year.str" :name="year.year.toString()"></el-tab-pane>
+            </el-tabs>
+        </el-row>
+
         <!--  商品Table列 -->
         <el-row>
             <el-col :span="24" style="margin-top: 20px;">
@@ -72,24 +79,48 @@
                 pageSize: 15,
                 total: 1,
                 loading: true,
-                classes: []
+                classes: [],
+                years: [],
+                nowYear: new Date().getFullYear(),
+                selectYear: new Date().getFullYear().toString()
             }
         },
         components:{ClassReceive},
         mounted: function () {
             this.$nextTick(function() {
+                let year = this.nowYear;
+                let yearString = year.toString();
+                for (let i = 0; i < 6; i++) {
+                    let up = '_1';
+                    if(i === 0) {
+                        yearString = year.toString() + '(上学期 + 全年)';
+                    }else{
+                        if(i%2 === 0) {
+                            year+=1;
+                            yearString = year.toString() + '(上学期 + 全年)';
+                        }else{
+                            yearString = year.toString() + '(下学年)';
+                            up = '_0';
+                        }
+                    }
+
+                    this.years.push({year:year.toString()+up,str:yearString});
+                }
                 this.getClassesMaxPage();
                 this.handleClassesCurrentChange(1);
                 this.loading = false;
             })
         },
         methods: {
+            handleClick(tab, event) {
+                console.log(this.selectYear);
+            },
             openClassReceiver(item){
                 this.$refs.Receivers.ClassReceive(item.id);
             },
             getClassesMaxPage() {
                 let that = this;
-                axios.get('/classes/count')
+                axios.get('/classes/count'+'?year='+this.selectYear)
                     .then(function (response) {
                         that.total = response.data.response.count;
                     })
@@ -102,7 +133,7 @@
 
             handleClassesCurrentChange(currentPage) {
                 let that = this;
-                axios.get('/classes/select?page='+currentPage+'&limit='+that.pageSize) .then(function (response) {
+                axios.get('/classes/select?page='+currentPage+'&limit='+that.pageSize+'&year='+this.selectYear) .then(function (response) {
                     that.classes = response.data.response.list;
                 }).catch(function (error) {
                     that.openRefresh('網絡不穩定，是否重試？',function () {
@@ -155,7 +186,7 @@
             deleteClasses(item,index){
                 let that = this;
                 axios.delete('/classes/delete?id='+item.id) .then(function (response) {
-                    if(response.data.code == 0) {
+                    if(response.data.code === 0) {
                         that.$emit('success',function () {
                             that.book.splice(index,1);
                         });
@@ -179,5 +210,7 @@
 </script>
 
 <style scoped>
-
+    .el-tabs__content{
+        display: none;
+    }
 </style>

@@ -64,7 +64,6 @@ class ClassesController extends Controller
      */
     public function receiveBookRecord(Request $request) : array
     {
-        //TODO： 获取已领书籍列表
         $classId = $request->get('cid',0);
 
         if($classId == 0) {
@@ -138,7 +137,7 @@ class ClassesController extends Controller
     {
         $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);
-
+        //todo: 获取 year up down  *计划 *需要的书本价格  * 人数  统计起来   获取实际本班需要缴纳的金额
         $class = ClassesService::limit([], $limit, $page, false, -1);
         return ['list' => $class];
     }

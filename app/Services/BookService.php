@@ -185,6 +185,7 @@ class BookService extends ServiceBasic
     }
 
     /**
+     * 计划总数
      * @param array $conditions
      * @param bool $deleted
      * @param int $status
@@ -199,6 +200,7 @@ class BookService extends ServiceBasic
     }
 
     /**
+     * 订单总数
      * @param array $conditions
      * @param bool $deleted
      * @param int $status
@@ -213,6 +215,7 @@ class BookService extends ServiceBasic
     }
 
     /**
+     * 获取一个技术
      * @param $id
      * @return array
      */
@@ -235,6 +238,7 @@ class BookService extends ServiceBasic
     }
 
     /**
+     * 获取一个订单
      * @param $id
      * @return array
      */
