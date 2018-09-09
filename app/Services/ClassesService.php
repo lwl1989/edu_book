@@ -28,6 +28,8 @@ class ClassesService extends ServiceBasic
         array_walk($list, function(&$v){
             if(!empty($v['receivers'])) {
                 $v['receivers'] = array_values(json_decode($v['receivers'], true));
+            }else{
+                $v['receivers'] = [];
             }
         });
         $classIds = array_column($list, 'id');
@@ -122,7 +124,6 @@ class ClassesService extends ServiceBasic
             'year','up_down','id',
                 'student_no_receive','student_received'
             ]);
-
         if(!empty($list)) {
             $list = $list->toArray();
             $response = [];

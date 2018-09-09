@@ -38,11 +38,11 @@
                     </el-table-column>
                     <el-table-column prop="price_count" label="需缴费用" >
                     </el-table-column>
-                    <el-table-column prop="excepted_count" label="已领教材人数(点击查看班级领书状况)" >
+                    <el-table-column prop="receivers" label="已领教材人数(点击查看班级领书状况)" >
                         <template slot-scope="scope">
                             <el-button  size="small"
                                         type="text" @click="openClassReceiver(scope.row)">
-                                {{scope.row.excepted_count}}
+                                {{scope.row.receivers.length}}
                             </el-button>
                         </template>
                     </el-table-column>
@@ -120,7 +120,8 @@
         },
         methods: {
             handleClick(tab, event) {
-                console.log(this.selectYear);
+                this.getClassesMaxPage()
+                this.handleClassesCurrentChange(1)
             },
             openClassReceiver(item){
                 this.$refs.Receivers.ClassReceive(item.id);

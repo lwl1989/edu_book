@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Actions;
 use App\Exceptions\ErrorConstant;
 use App\Http\Controllers\Controller;
 use App\Library\ArrayParse;
+use App\Models\Classes\Classes;
 use App\Services\Users\StudentService;
 use Illuminate\Http\Request;
 
@@ -114,7 +115,7 @@ class StudentController extends Controller
         foreach ($params as $key => $value) {
             $book->setAttr($key, $value);
         }
-
+        Classes::query()->where('id', $params['class_id'])->increment('student_count');
         return ['id' => $book->create(), 'create_at' => $time, 'update_at' => $time];
     }
 

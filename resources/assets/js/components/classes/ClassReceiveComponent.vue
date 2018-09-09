@@ -35,7 +35,7 @@
                 &nbsp;
             </el-row>
 
-            <el-button type="text" icon="el-icon-location">现在领取</el-button>
+            <el-button type="text" icon="el-icon-location">现在领取(请扫描书籍)</el-button>
             <el-table :data="books" stripe style="width: 100%">
                 <el-table-column prop="sn" label="教材sn">
                 </el-table-column>

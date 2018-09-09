@@ -117,7 +117,7 @@
                         this.$msgbox({
                             title: '提示',
                             message: h('p', null, [
-                                h('span', null,  '确定提交本计划？')
+                                h('span', null,  '确定添加？')
                             ]),
                             showCancelButton: true,
                             confirmButtonText: '确定',
