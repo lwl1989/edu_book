@@ -53,8 +53,20 @@ class ClassesController extends Controller
         if($classId == 0) {
             return ['code'=>ErrorConstant::PARAMS_ERROR];
         }
+        $condition = [
+            'class_id'=>$classId,
+        ];
+        $year = $request->get('year', '');
+        if(!empty($year)) {
+            $arr = explode('_', $year);
+            $year = $arr[0];
+            $upDwon = $arr[1] ?? 0;
+            $condition['year'] = $year;
+            $condition['up_down'] = $upDwon;
+        }
 
-        return ['list'=>ClassesService::receivedLimit(['class_id'=>[$classId]],false, -1)];
+
+        return ['list'=>ClassesService::receivedLimit($upDwon,false, -1)];
     }
 
     /**

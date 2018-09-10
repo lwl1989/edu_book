@@ -155,7 +155,7 @@ class StudentController extends Controller
         }
 
         $class = new StudentService();
-
+        Classes::query()->where('id', $id)->decrement('student_count');
         return ['code' => $class->delete($id) >= 0 ? 0 : 1];
     }
 
