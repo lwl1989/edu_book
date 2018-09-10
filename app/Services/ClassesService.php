@@ -14,12 +14,15 @@ class ClassesService extends ServiceBasic
 {
     protected $model = Classes::class;
 
-    public static function limit(array $conditions, int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
+    public static function limit(array $conditions, array $join = [], int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
     {
         $query = self::_getQuery($conditions, $deleted, $status);
         $list = $query
-            ->leftJoin('class_receive',function($query){
+            ->leftJoin('class_receive',function($query) use($join){
                 $query->on('class_receive.class_id','=','classes.id');
+                foreach ($join as $key=>$value) {
+                    $query->where($key, $value);
+                }
             })
             ->skip(($page-1)*$limit)
             ->take($limit)

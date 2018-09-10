@@ -164,7 +164,7 @@ class ClassesController extends Controller
             $condition['class_receive.up_down'] = 0;
         }
 
-        $class = ClassesService::limit($condition, $limit, $page, false, -1);
+        $class = ClassesService::limit([], $condition, $limit, $page, false, -1);
         return ['list' => $class];
     }
 
