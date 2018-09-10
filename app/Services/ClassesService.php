@@ -14,7 +14,7 @@ class ClassesService extends ServiceBasic
 {
     protected $model = Classes::class;
 
-    public static function limit(array $conditions, array $join = [], int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
+    public static function selfLimit(array $conditions, array $join = [], int $limit = 15, int $page = 1, bool $deleted = false, int $status = -1): array
     {
         $query = self::_getQuery($conditions, $deleted, $status);
         $list = $query
