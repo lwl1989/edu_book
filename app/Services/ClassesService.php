@@ -115,7 +115,7 @@ class ClassesService extends ServiceBasic
     {
         self::setSelfModel(ClassesReceive::class);
         $query = self::_getQuery($conditions, $deleted, $status);
-//
+        var_dump($query->toSql());
 //        $query->leftJoin('class_receive',function($query) {
 //            $query->on('class_receive.student_id','=','student.id');
 //        });
