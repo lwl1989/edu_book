@@ -60,13 +60,13 @@ class ClassesController extends Controller
         if(!empty($year)) {
             $arr = explode('_', $year);
             $year = $arr[0];
-            $upDwon = $arr[1] ?? 0;
+            $upDown = $arr[1] ?? 0;
             $condition['year'] = $year;
-            $condition['up_down'] = $upDwon;
+            $condition['up_down'] = $upDown;
         }
 
 
-        return ['list'=>ClassesService::receivedLimit($upDwon,false, -1)];
+        return ['list'=>ClassesService::receivedLimit($condition,false, -1)];
     }
 
     /**
