@@ -28,13 +28,13 @@ class ClassesService extends ServiceBasic
             ->take($limit)
             ->get(['classes.*','class_receive.student_received as receivers'])
             ->toArray();
-        array_walk($list, function(&$v) use ($conditions){
+        array_walk($list, function(&$v) use ($join){
             if(!empty($v['receivers'])) {
                 $v['receivers'] = array_values(json_decode($v['receivers'], true));
             }else{
                 $v['receivers'] = [];
             }
-            $v['year'] = $conditions['year'].'_'.$conditions['up_down'];
+            $v['year'] = $join['year'].'_'.$join['up_down'];
         });
         $classIds = array_column($list, 'id');
 
