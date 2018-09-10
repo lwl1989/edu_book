@@ -25,12 +25,13 @@ class ClassesService extends ServiceBasic
             ->take($limit)
             ->get(['classes.*','class_receive.student_received as receivers'])
             ->toArray();
-        array_walk($list, function(&$v){
+        array_walk($list, function(&$v) use ($conditions){
             if(!empty($v['receivers'])) {
                 $v['receivers'] = array_values(json_decode($v['receivers'], true));
             }else{
                 $v['receivers'] = [];
             }
+            $v['year'] = $conditions['year'].'_'.$conditions['up_down'];
         });
         $classIds = array_column($list, 'id');
 
@@ -115,7 +116,7 @@ class ClassesService extends ServiceBasic
     {
         self::setSelfModel(ClassesReceive::class);
         $query = self::_getQuery($conditions, $deleted, $status);
-        var_dump($query->toSql());
+//        var_dump($query->toSql());
 //        $query->leftJoin('class_receive',function($query) {
 //            $query->on('class_receive.student_id','=','student.id');
 //        });

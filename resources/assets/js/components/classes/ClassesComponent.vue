@@ -120,7 +120,7 @@
         },
         methods: {
             handleClick(tab, event) {
-                this.getClassesMaxPage()
+                this.getClassesMaxPage();
                 this.handleClassesCurrentChange(1)
             },
             openClassReceiver(item){

@@ -78,6 +78,7 @@
                 books:[],
                 books_received:[],
                 code:"",
+                year:''
             }
         },
         watch:{

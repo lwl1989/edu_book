@@ -149,8 +149,22 @@ class ClassesController extends Controller
     {
         $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);
+
         //todo: 获取 year up down  *计划 *需要的书本价格  * 人数  统计起来   获取实际本班需要缴纳的金额
-        $class = ClassesService::limit([], $limit, $page, false, -1);
+
+        $year = $request->get('year', '');
+        if(!empty($year)) {
+            $arr = explode('_', $year);
+            $year = $arr[0];
+            $upDown = $arr[1] ?? 0;
+            $condition['year'] = $year;
+            $condition['up_down'] = $upDown;
+        }else{
+            $condition['year'] = date('Y');
+            $condition['up_down'] = 0;
+        }
+
+        $class = ClassesService::limit($condition, $limit, $page, false, -1);
         return ['list' => $class];
     }
 
