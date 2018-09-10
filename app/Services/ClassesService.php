@@ -21,7 +21,7 @@ class ClassesService extends ServiceBasic
             ->leftJoin('class_receive',function($query) use($join){
                 $query->on('class_receive.class_id','=','classes.id');
                 foreach ($join as $key=>$value) {
-                    $query->where('class_receive'.$key, $value);
+                    $query->where('class_receive.'.$key, $value);
                 }
             })
             ->skip(($page-1)*$limit)
