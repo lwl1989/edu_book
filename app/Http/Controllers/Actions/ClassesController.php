@@ -157,11 +157,11 @@ class ClassesController extends Controller
             $arr = explode('_', $year);
             $year = $arr[0];
             $upDown = $arr[1] ?? 0;
-            $condition['class_receive.year'] = $year;
-            $condition['class_receive.up_down'] = $upDown;
+            $condition['year'] = $year;
+            $condition['up_down'] = $upDown;
         }else{
-            $condition['class_receive.year'] = date('Y');
-            $condition['class_receive.up_down'] = 0;
+            $condition['year'] = date('Y');
+            $condition['up_down'] = 0;
         }
 
         $class = ClassesService::selfLimit([], $condition, $limit, $page, false, -1);
