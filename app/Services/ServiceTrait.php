@@ -121,6 +121,7 @@ trait ServiceTrait
      */
     protected static function _getQuery(array $conditions, bool $deleted = false, int $status = -1)
     {
+        $conditions['deleted'] = 0;
         $service = self::_getInstance();
         $model = $service->getModelInstance();
 

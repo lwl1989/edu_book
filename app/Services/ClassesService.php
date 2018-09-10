@@ -28,7 +28,9 @@ class ClassesService extends ServiceBasic
             ->take($limit)
             ->get(['classes.*','class_receive.student_received as receivers'])
             ->toArray();
-        array_walk($list, function(&$v) use ($join){
+
+        //$calClasses = [];
+        array_walk($list, function(&$v) use ($join, &$calClasses){
             if(!empty($v['receivers'])) {
                 $v['receivers'] = array_values(json_decode($v['receivers'], true));
             }else{
@@ -36,10 +38,10 @@ class ClassesService extends ServiceBasic
             }
             $v['year'] = $join['year'].'_'.$join['up_down'];
         });
-        $classIds = array_column($list, 'id');
+        $classIds = array_column($list, 'student_count','id');
+        //*计划 *需要的书本价格  * 人数  统计起来   获取实际本班需要缴纳的金额
 
-//        Db::raw('SELECT * FROM `article`WHERE JSON_CONTAINS(classes, \'["Mysql"]\');')
-//        BookPlan::query()->whereIn()
+
 
         return $list;
         //return parent::limit($conditions, $limit, $page, $deleted, $status);
